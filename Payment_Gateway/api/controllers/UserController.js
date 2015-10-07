@@ -34,9 +34,9 @@ module.exports = {
 					res.serverError(err);
 				} else {
 					var token = jwt.sign(user[0], 'secret', {expiresInMinutes: 60*5*100});
-					user.token = token;
-					req.user = user;
-					res.json({user: user});
+					user[0].token = token;
+					req.user = user[0];
+					res.json({user: user[0]});
 				}
 			});
 		}
@@ -73,7 +73,8 @@ module.exports = {
 
 	// Log out user
 	logout: function (req, res) {
-		req.user = null;
+		// req.user = null;
+		delete req['user'];
         res.ok("Logout Successfully");
     },
 

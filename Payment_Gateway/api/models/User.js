@@ -45,6 +45,8 @@ module.exports = {
 		User.findOne({where: {email:data.email}}).exec(function (err, user) {
 	  		if (err) {
 	  			callback(err);
+	  		} else if(user){
+	  			callback("User Already exists", null);
 	  		} else {
 	  			saltAndHash(data.password,function (hash) {
 	  				data.password = hash;
@@ -58,10 +60,7 @@ module.exports = {
 	  				 	}
 	  			  	});
 	  			});
-	  		} 
-	  		// else {
-	    //     	callback("User Already exists", null);
-	    //   	}		
+	      	}		
 	  	});
 	},
 
@@ -82,7 +81,7 @@ module.exports = {
   			}
   			else{
   				callback({status: 402, message: "User does not exists"});
-  			}	
+  			}
 	  	});
 	},
 

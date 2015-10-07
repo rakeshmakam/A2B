@@ -8,7 +8,7 @@
  * For more information on configuration, check out:
  * http://sailsjs.org/#/documentation/reference/sails.config/sails.config.http.html
  */
-
+var expressJwt = require('express-jwt');
 module.exports.http = {
 
   /****************************************************************************
@@ -85,3 +85,18 @@ module.exports.http = {
 
   // cache: 31557600000
 };
+module.exports = {
+  http:{
+    customMiddleware: function(app){
+      // We are going to protect /api routes with JWT
+      app.use(expressJwt({secret: 'secret'}).unless({path: [
+          '/api/user/signup',
+          /^\/styles\/.*/ ,
+          /^\/js\/.*/,
+          /^\/images\/.*/,
+          '/favicon.ico',
+          /^\/fonts\/.*/
+      ]}));
+    }
+  }
+}
