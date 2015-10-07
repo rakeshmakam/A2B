@@ -8,64 +8,133 @@
 module.exports = {
 
 	attributes: {
-		full_name:{
-			type:'string'
-		},
-		email:{
-			type:'string'
-		},
-		Phone_num:{
+		full_name: {
 			type:'string',
+			required : true,
+		},
+
+		email: {
+			type: "email",
+			required : true,
+			unique: true,
+			size: 100
+		},
+
+		Phone_num: {
+			type:'string',
+			required : true,
 			size:10
 		},
-		password:{
-			type:'string'
+
+		password: {
+			type:'string',
+			required : true,
+			size: 50
+		},
+
+		email_verified: {
+			type : "boolean",
+			defaultsTo : false,
+			required : true
 		}
+
 	},
 
-	signUp: function(signUpData, callback){
-		User.findOne({where:{email:signUpData.email}}).exec(function(err, user){
-	  		if(err)
-	  			cb(err);
-	  		else if(!user){
-	  			saltAndHash(signUpData.password,function(hash){
-	  				signUpData.password = hash;
-	  				User.create(signUpData, function(err, user){
-					   	if(err)
-							cb(err);
-	  				 	else{
+	// Add user
+	add: function (data, callback) {
+		User.findOne({where: {email:data.email}}).exec(function (err, user) {
+	  		if (err) {
+	  			callback(err);
+	  		} else {
+	  			saltAndHash(data.password,function (hash) {
+	  				data.password = hash;
+
+	  				User.create(data, function (err, user) {
+					   	if (err) {
+							callback(err);
+	  				 	} else {
 	  						delete user['password'];
-	  						cb(null, user);
+	  						callback(null, user);
 	  				 	}
 	  			  	});
 	  			});
-	  		}
-	      	else{
-	        	cb("User Already exists", null);
-	      	}		
+	  		} 
+	  		// else {
+	    //     	callback("User Already exists", null);
+	    //   	}		
 	  	});
 	},
 
-	login: function(loginData, callback){
-		User.findOne({where:{email:loginData.email}}).exec(function(err, user){
-	  		if(err)
+	// Login 
+	login: function (data, callback) {
+		User.findOne({where:{email:data.email}}).exec(function (err, user) {
+	  		if(err) {
 	  			callback(err);
-	  		else if(user){
-	  			validatePassword(loginData.password,user.password,function(res){
-					if(res){
+	  		} else if (user) {
+	  			validatePassword(data.password, user.password, function (res) {
+					if (res) {
 						delete user['password'];
 						callback(null,user);
-					}
-					else{
-						callback("Email or password does not match");
+					} else {
+						callback({status: 402, message: "Email or password does not match"});
 					}
   				});
   			}
   			else{
-  				callback("user does not exist");
+  				callback({status: 402, message: "User does not exists"});
   			}	
 	  	});
-	}
+	},
+
+	// Get user profile
+	profile:  function (id, callback) {
+		User.findOne({id : id}).exec(function (err, user){
+			if(!err) {
+				delete user['password'];				
+				callback(null , user);
+			} else {
+				callback(err);
+			}
+		});
+	},
+
+	// Edit user details
+	edit: function (userId, data, callback) {
+		if (data.password) {
+			saltAndHash(data.password, function (hash) {
+				data.password = hash;
+			});
+		};
+		
+		User.update({id : userId}, data, function (err, user) {
+			if (!err) {
+				if (user.length == 0) {
+					callback({status: 402, message: "User not found"});
+				} else {
+					delete data['password'];
+					callback(null, user[0]);
+				}
+			} else {
+				callback(err);
+			}
+		});
+	},
+
+	// Delete user
+	delete: function (userId, callback) {
+		User.destroy({id : userId}).exec(function (err, data) {
+			if (!err) {
+				if (data.length == 0) {
+					callback({status: 402, message: "User not found"});
+				} else {
+					callback(null, data.id);
+				}
+			} else {
+				callback(err);
+			}
+		});
+    }
+
 };
 
 var generateSalt = function(){

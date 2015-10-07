@@ -36,15 +36,26 @@ module.exports.routes = {
     view: 'homepage'
   },
 
-  '/api/user/signUp'                :           'UserController.userSignUp',
-  '/api/user/signIn'                :           'UserController.userLogin',
-  '/api/user/getUserProfile'        :           'UserController.getUserProfile',
-  '/api/user/getUserBills'          :           'UserController.getUserBills',
-  '/api/user/addUserAddress'        :           'UserController.addOrUpdateUserAddress',
-  '/api/user/removeUserAddress'     :           'UserController.removeUserAddress',
-  '/api/user/getUserPurchases'      :           'UserController.getUserPurchases',
-  '/api/user/authorizeUser'         :           'UserController.userAuthorization',
-  '/api/user/makeUserPayment'       :           'UserController.userPaymentExecution'
+  'POST /api/user/signup'           : 'UserController.add',
+  'GET /api/user'                   : 'UserController.profile',
+  'PUT /api/user'                   : 'UserController.edit',
+  'POST /api/user/login'            : 'UserController.login',
+  'GET /api/user/logout'            : 'UserController.logout',
+  'DELETE /api/user/:id'            : 'UserController.delete',  
+  // 'PUT /api/user/reset_password'    : 'UserController.resetPassword'
+
+
+
+
+  // '/api/user/signUp'                :           'UserController.userSignUp',
+  // '/api/user/signIn'                :           'UserController.userLogin',
+  // '/api/user/getUserProfile'        :           'UserController.getUserProfile',
+  // '/api/user/getUserBills'          :           'UserController.getUserBills',
+  // '/api/user/addUserAddress'        :           'UserController.addOrUpdateUserAddress',
+  // '/api/user/removeUserAddress'     :           'UserController.removeUserAddress',
+  // '/api/user/getUserPurchases'      :           'UserController.getUserPurchases',
+  // '/api/user/authorizeUser'         :           'UserController.userAuthorization',
+  // '/api/user/makeUserPayment'       :           'UserController.userPaymentExecution'
 
 
   /***************************************************************************
