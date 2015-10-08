@@ -91,6 +91,7 @@ module.exports = {
       // We are going to protect /api routes with JWT
       app.use(expressJwt({secret: 'secret'}).unless({path: [
           '/api/user/signup',
+          '/api/user/login',
           /^\/styles\/.*/ ,
           /^\/js\/.*/,
           /^\/images\/.*/,
