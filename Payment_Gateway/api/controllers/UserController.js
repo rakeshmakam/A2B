@@ -93,6 +93,23 @@ module.exports = {
         } else {
         	res.status(400).json({message: "ID is missing"});
         }
+    },
+
+    addOrUpdateAddress: function(req, res){
+    	sails.log.debug('Address adding or updating initiated');
+    	if(!req.body && !req.body.addresses){
+    		res.badRequest('No address supplied');
+    	}else{
+    		var userId = req.user.id;
+    		Address.addOrUpdate(userId, req.body.addresses, function(err, updatedData){
+    			if(err){
+    				res.serverError(err);
+    			}else{
+    				sails.log.debug('Address added/updated');
+    				res.json({status:true, addresses: updatedData});
+    			}
+    		});
+    	}
     }
 };
 

@@ -51,8 +51,8 @@ module.exports.routes = {
   // '/api/user/signIn'                :           'UserController.userLogin',
   // '/api/user/getUserProfile'        :           'UserController.getUserProfile',
   // '/api/user/getUserBills'          :           'UserController.getUserBills',
-  // '/api/user/addUserAddress'        :           'UserController.addOrUpdateUserAddress',
-  // '/api/user/removeUserAddress'     :           'UserController.removeUserAddress',
+  'POST /api/user/address'          :           'UserController.addOrUpdateAddress',
+  'DELETE /api/user/address'        :           'UserController.deleteAddress'
   // '/api/user/getUserPurchases'      :           'UserController.getUserPurchases',
   // '/api/user/authorizeUser'         :           'UserController.userAuthorization',
   // '/api/user/makeUserPayment'       :           'UserController.userPaymentExecution'
