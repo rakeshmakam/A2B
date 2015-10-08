@@ -4,6 +4,7 @@
 * @description :: TODO: You might write a short summary of how this model works and what it represents here.
 * @docs        :: http://sailsjs.org/#!documentation/models
 */
+var crypto = require('crypto');
 
 module.exports = {
 
@@ -20,7 +21,7 @@ module.exports = {
 			size: 100
 		},
 
-		Phone_num: {
+		phone_num: {
 			type:'string',
 			required : true,
 			size:10
