@@ -34,35 +34,71 @@ module.exports = {
 		},
 
 		email_verified: {
-			type : "boolean",
+			type : 'boolean',
 			defaultsTo : false,
 			required : true
+		},
+
+		random_number: {
+			type: 'string'
 		}
 
 	},
 
 	// Add user
 	add: function (data, callback) {
-		User.findOne({where: {email:data.email}}).exec(function (err, user) {
-	  		if (err) {
-	  			callback(err);
-	  		} else if(user){
-	  			callback("User Already exists", null);
-	  		} else {
-	  			saltAndHash(data.password,function (hash) {
-	  				data.password = hash;
+		saltAndHash(data.password,function (hash) {
+	  		data.password = hash;
+	  		data.random_number = Math.floor((Math.random() * 100000) + 1);
+			User.create(data, function (err, user) {
+			   	if (err) {
+					callback(err);
+				} else {
+					delete user['password'];
+					callback(null, user);
+			 	}
+		  	});
+		});
+		// User.findOne({where: {email:data.email}}).exec(function (err, user) {
+	 //  		if (err) {
+	 //  			callback(err);
+	 //  		} else if(user){
+	 //  			callback("User Already exists", null);
+	 //  		} else {
+	 //  			saltAndHash(data.password,function (hash) {
+	 //  				data.password = hash;
 
-	  				User.create(data, function (err, user) {
-					   	if (err) {
-							callback(err);
-	  				 	} else {
-	  						delete user['password'];
-	  						callback(null, user);
-	  				 	}
-	  			  	});
-	  			});
-	      	}		
-	  	});
+	 //  				User.create(data, function (err, user) {
+		// 			   	if (err) {
+		// 					callback(err);
+	 //  				 	} else {
+	 //  						delete user['password'];
+	 //  						callback(null, user);
+	 //  				 	}
+	 //  			  	});
+	 //  			});
+	 //      	}		
+	 //  	});
+	},
+
+	signupActivate: function (randamNumber, callback) {
+		User.find({where:{random_number: randamNumber}}).exec(function (err, user) {
+			if(err) {
+	  			callback(err);
+	  		} else if (user.length > 0) {
+				user.random_number = null;
+
+				User.update({id : user.id}, user, function (error, data) {
+					if(!error) {
+						callback(null, {status: 200, message: "Your account is activated successfully, please try to login"});
+					} else {
+						callback(error);
+					}
+				});
+			} else {
+				callback({status: 404, message: "Your account is already activated"});
+			}
+		});
 	},
 
 	// Login 

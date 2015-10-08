@@ -9,17 +9,50 @@ var jwt = require('jsonwebtoken');
 module.exports = {
 	// Add user
 	add: function (req, res) {
-		if (!req.body && !req.body.full_name && !req.body.email && !req.body.phone_num && !req.body.userPassword) {
-			res.badRequest('Email or password missing in request');
-		} else {
-			User.add(req.body, function(err, user){
-				if (err) {
-					res.serverError(err);
-				} else {
-					res.ok({message: "SignUp successfull"});
-				}
-			});
-		}
+		User.add(req.body, function(err, user){
+			if (err) {
+				res.serverError(err);
+			} else {
+				res.ok({message: "Thank you for signing up with us"});
+
+				EmailService.send(user, function(error, data){
+					if (!error) {
+						sails.log.debug(data);
+					} else {
+						sails.log.error(error);
+					}
+				});
+			}
+		});
+		// if (!req.body && !req.body.full_name && !req.body.email && !req.body.phone_num && !req.body.userPassword) {
+		// 	res.badRequest('Email or password missing in request');
+		// } else {
+		// 	User.add(req.body, function(err, user){
+		// 		if (err) {
+		// 			res.serverError(err);
+		// 		} else {
+		// 			res.ok({message: "Thank you for signing up with us"});
+
+		// 			EmailService.send(user, function(error, data){
+		// 				if (!error) {
+		// 					sails.log.debug(data);
+		// 				} else {
+		// 					sails.log.error(error);
+		// 				}
+		// 			});
+		// 		}
+		// 	});
+		// }
+	},
+
+	signupActivate: function (req, res) {
+		User.signupActivate(req.param('randam'), function (err, data) {
+			if (!err) {
+				res.json(data);
+			} else { 
+				res.negotiate(err);
+			}
+		});
 	},
 
 	// Login
@@ -71,7 +104,6 @@ module.exports = {
 
 	// Log out user
 	logout: function (req, res) {
-		// req.user = null;
 		delete req['user'];
         res.ok("Logout Successfully");
     },

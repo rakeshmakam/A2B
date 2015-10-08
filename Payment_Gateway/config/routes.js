@@ -42,6 +42,7 @@ module.exports.routes = {
   'POST /api/user/login'            : 'UserController.login',
   'GET /api/user/logout'            : 'UserController.logout',
   'DELETE /api/user/:id'            : 'UserController.delete',  
+  'GET /api/signupactivate/:randam' : 'UserController.signupActivate',
   // 'PUT /api/user/reset_password'    : 'UserController.resetPassword'
 
 

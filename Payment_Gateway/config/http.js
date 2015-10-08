@@ -92,6 +92,7 @@ module.exports = {
       app.use(expressJwt({secret: 'secret'}).unless({path: [
           '/api/user/signup',
           '/api/user/login',
+          '/^\/signupactivate\/',
           /^\/styles\/.*/ ,
           /^\/js\/.*/,
           /^\/images\/.*/,
