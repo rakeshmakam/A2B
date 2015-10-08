@@ -9,7 +9,7 @@ var jwt = require('jsonwebtoken');
 module.exports = {
 	// Add user
 	add: function (req, res) {
-		if (!req.body && !req.body.full_name && !req.body.email && !req.body.phoneNum && !req.body.userPassword) {
+		if (!req.body && !req.body.full_name && !req.body.email && !req.body.phone_num && !req.body.userPassword) {
 			res.badRequest('Email or password missing in request');
 		} else {
 			User.add(req.body, function(err, user){
@@ -108,6 +108,26 @@ module.exports = {
     			}
     		});
     	}
+    },
+
+    userAuthorization: function(req, res){
+    	sails.log.debug('user authorization initiated');
+    	var dataToBeSigned = {
+    		cart_value : req.body.cartValue,
+    		amount: req.body.amount,
+    		merchant_id: req.body.merchantId
+    	};
+		var token = jwt.sign(dataToBeSigned, 'secret', {expiresInMinutes: 2});
+		sails.log.debug('Generated user authorization token');
+		res.json({userAuthToken: token});
+    },
+
+    userPayment: function(req, res){
+    	sails.log.debug('user payment initiated');
+    	var payloadDigest = req.headers.digest;
+    	//encrypt payload using your own key and match it with the digest in request header
+    	//If they match then send a true status else false
+
     }
 };
 

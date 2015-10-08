@@ -52,10 +52,10 @@ module.exports.routes = {
   // '/api/user/getUserProfile'        :           'UserController.getUserProfile',
   // '/api/user/getUserBills'          :           'UserController.getUserBills',
   'POST /api/user/address'          :           'UserController.addOrUpdateAddress',
-  'DELETE /api/user/address'        :           'UserController.deleteAddress'
+  // 'DELETE /api/user/address'        :           'UserController.deleteAddress'
   // '/api/user/getUserPurchases'      :           'UserController.getUserPurchases',
-  // '/api/user/authorizeUser'         :           'UserController.userAuthorization',
-  // '/api/user/makeUserPayment'       :           'UserController.userPaymentExecution'
+  'POST /api/user/authorizeUser'    :           'UserController.userAuthorization',
+  'POST /api/user/makePayment'      :           'UserController.userPaymentExecution'
 
 
   /***************************************************************************

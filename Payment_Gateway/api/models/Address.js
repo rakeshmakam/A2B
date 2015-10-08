@@ -41,20 +41,19 @@ module.exports = {
 				});
 			}else{
 				var counter = 0;
-						_.each(function(addresses, address){
-							Address.create({UserId:userId, Address: address}).exec(function(err, addr){
-								if(err){
-									callback(err, null);
-								}else{
-									if(counter == addresses.length-1){
-										callback(null, addresses);
-									}else{
-										counter = counter + 1;
-									}
-								}
-							});
-						});
-					}
+				_.each(function(addresses, address){
+					Address.create({UserId:userId, Address: address}).exec(function(err, addr){
+						if(err){
+							callback(err, null);
+						}else{
+							if(counter == addresses.length-1){
+								callback(null, addresses);
+							}else{
+								counter = counter + 1;
+							}
+						}
+					});
+				});
 			}
 		});
 	}
