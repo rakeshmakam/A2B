@@ -12,12 +12,10 @@ module.exports = {
 		if (!req.body && !req.body.full_name && !req.body.email && !req.body.phoneNum && !req.body.userPassword) {
 			res.badRequest('Email or password missing in request');
 		} else {
-			sails.log.debug('SignUp initiated');
 			User.add(req.body, function(err, user){
 				if (err) {
 					res.serverError(err);
 				} else {
-					sails.log.debug('SignUp successfull');
 					res.ok({message: "SignUp successfull"});
 				}
 			});
@@ -33,10 +31,10 @@ module.exports = {
 				if (err) {
 					res.serverError(err);
 				} else {
-					var token = jwt.sign(user[0], 'secret', {expiresInMinutes: 60*5*100});
-					user[0].token = token;
-					req.user = user[0];
-					res.json({user: user[0]});
+					var token = jwt.sign(user, 'secret', {expiresInMinutes: 60*5*100});
+					user.token = token;
+					req.user = user;
+					res.json({user: user});
 				}
 			});
 		}
