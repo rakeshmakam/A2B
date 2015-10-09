@@ -57,14 +57,14 @@ module.exports = {
 
 	// Login
 	login: function (req, res) {
-		if (!req.body && !req.body.email && !req.body.userPassword) {
+		if (!req.body && !req.body.email && !req.body.password) {
 			res.badRequest('Email or password missing in request');
 		} else {
 			User.login(req.body, function (err, user) {
 				if (err) {
 					res.serverError(err);
 				} else {
-					var token = jwt.sign(user, 'secret', {expiresInMinutes: 60*5*100});
+					var token = jwt.sign(user, 'secret', {expiresIn: 1296000}); //15 days
 					user.token = token;
 					req.user = user;
 					res.json({user: user});
@@ -145,15 +145,23 @@ module.exports = {
     userAuthorization: function(req, res){
     	sails.log.debug('user authorization initiated');
     	var userId = req.user.id;
-    	var dataToBeSigned = {
-    		user_id: userId,
-    		cart_value : req.body.cartValue,
-    		amount: req.body.amount,
-    		merchant_id: req.body.merchantId
-    	};
-		var token = jwt.sign(dataToBeSigned, 'secret', {expiresInMinutes: 2});
-		sails.log.debug('Generated user authorization token');
-		res.json({userAuthToken: token});
+    	Merchants.validateMerchant(req.body.merchantId, function(err, merchantDetails){
+    		if(err){
+    			res.serverError(err);
+    		}else if(merchantDetails == false){
+    			res.status(401).json({msg : 'Merchant not registered'});
+    		}else{
+    			var dataToBeSigned = {
+		    		user_id: userId,
+		    		cart_value : req.body.cartValue,
+		    		amount: req.body.amount,
+		    		merchant_id: req.body.merchantId
+		    	};
+				var token = jwt.sign(dataToBeSigned, 'secret', {expiresIn: 120}); //2 minutes
+				sails.log.debug('Generated user authorization token');
+				res.json({userAuthToken: token});
+    		}
+    	});
     },
 
     userPayment: function(req, res){
@@ -171,7 +179,7 @@ module.exports = {
 				    	transaction_id += set[p];
 				  	}
 	    			var transactionRequest = {
-	    				merchantId: merchantData.id,
+	    				merchantId: merchantData.merchant_id,
 	    				merchant: merchantData.merchant_name,
 	    				currency: req.body.currency,
 	    				amount: req.body.amount,
@@ -181,6 +189,8 @@ module.exports = {
 	    			};
 
 	    			//Make request to Java API
+	    			sails.log.debug('Payment done successfully');
+	    			res.json({msg:'payment done successfully'});
     			}else{
     				res.status(401).json({msg:'Unauthorized merchant key', status: false, error:'merchant'});
     			}
