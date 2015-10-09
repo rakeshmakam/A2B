@@ -126,7 +126,7 @@ module.exports = {
     },
 
     addOrUpdateAddress: function(req, res){
-    	sails.log.debug('Address adding or updating initiated');
+    	sails.log.debug('Address adding/updating initiated');
     	if(!req.body && !req.body.addresses){
     		res.badRequest('No address supplied');
     	}else{
@@ -144,7 +144,9 @@ module.exports = {
 
     userAuthorization: function(req, res){
     	sails.log.debug('user authorization initiated');
+    	var userId = req.user.id;
     	var dataToBeSigned = {
+    		user_id: userId,
     		cart_value : req.body.cartValue,
     		amount: req.body.amount,
     		merchant_id: req.body.merchantId
@@ -156,10 +158,33 @@ module.exports = {
 
     userPayment: function(req, res){
     	sails.log.debug('user payment initiated');
-    	var payloadDigest = req.headers.digest;
-    	//encrypt payload using your own key and match it with the digest in request header
-    	//If they match then send a true status else false
+    	var merchantKey = req.body.merchantAuthKey;
+    	Merchants.authorizePayment(merchantKey, function(err, merchantData){
+    		if(err){
+    			res.serverError(err);
+    		}else{
+    			if(merchantData.status == true){
+    				var set = '0123456789abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ';
+					var transaction_id = '';
+				  	for (var i = 0; i < 20; i++) {
+				    	var p = Math.floor(Math.random() * set.length);
+				    	transaction_id += set[p];
+				  	}
+	    			var transactionRequest = {
+	    				merchantId: merchantData.id,
+	    				merchant: merchantData.merchant_name,
+	    				currency: req.body.currency,
+	    				amount: req.body.amount,
+	    				itemName: req.body.item_name,
+	    				transactionId: transaction_id,
+	    				merchantTransactionId : req.body.merchant_transaction_id
+	    			};
 
+	    			//Make request to Java API
+    			}else{
+    				res.status(401).json({msg:'Unauthorized merchant key', status: false, error:'merchant'});
+    			}
+    		}
+    	});
     }
 };
-

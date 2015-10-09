@@ -46,17 +46,15 @@ module.exports.routes = {
   // 'PUT /api/user/reset_password'    : 'UserController.resetPassword'
 
 
-
-
-  // '/api/user/signUp'                :           'UserController.userSignUp',
-  // '/api/user/signIn'                :           'UserController.userLogin',
   // '/api/user/getUserProfile'        :           'UserController.getUserProfile',
   // '/api/user/getUserBills'          :           'UserController.getUserBills',
   'POST /api/user/address'          :           'UserController.addOrUpdateAddress',
   // 'DELETE /api/user/address'        :           'UserController.deleteAddress'
   // '/api/user/getUserPurchases'      :           'UserController.getUserPurchases',
   'POST /api/user/authorizeUser'    :           'UserController.userAuthorization',
-  'POST /api/user/makePayment'      :           'UserController.userPaymentExecution'
+  'POST /api/user/makePayment'      :           'UserController.userPayment',
+
+  'POST /api/merchant'              :           'MerchantController.add',
 
 
   /***************************************************************************
