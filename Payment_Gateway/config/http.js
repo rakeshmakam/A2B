@@ -93,6 +93,8 @@ module.exports = {
           '/user/login',
           '/merchant',
           '/user/makePayment/',
+          '/user/reset_password_initiate',
+          '/user/reset_password',
           /^\/user\/activate\/.*/
       ]}));
     }

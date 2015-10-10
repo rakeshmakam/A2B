@@ -160,7 +160,44 @@ module.exports = {
 				callback(err);
 			}
 		});
-    }
+    },
+
+    resetPasswordInitiate: function(email, callback){
+    	User.findOne({where: {email: email}}).exec(function (err, user){
+    		if(!err){
+    			callback(null, {message: "Please check your mail"});
+    		} else {
+    			callback(err);
+    		}
+    	});
+    },
+
+    //resetting the password
+	resetPassword: function(data, callback) {
+		User.findOne({where: {hash_key: data.hash_key}}).exec(function(err, user){
+			if(!err){
+				var obj = {};
+				if (data.password) {
+					saltAndHash(data.password, function (hash) {
+						obj.password = hash;
+					});
+				};
+				User.update({id : user.id}, obj, function (err, user) {
+					if (!err) {
+						if (user.length == 0) {
+							callback({status: 402, message: "User not found"});
+						} else {
+							callback(null, user);
+						}
+					} else {
+						callback(err);
+					}
+				});
+			} else {
+				callback(err)
+			}
+		});
+    },
 
 };
 

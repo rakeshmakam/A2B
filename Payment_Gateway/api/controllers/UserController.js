@@ -107,6 +107,44 @@ module.exports = {
         }
     },
 
+    //Reset Password Initiate.
+	resetPasswordInitiate: function (req, res) {
+    	if (req.body.email) {
+			User.resetPasswordInitiate(req.body.email, function (err, user) {
+				if (!err) {
+					res.json(user);
+
+					EmailService.resetPassword(user, function (error, data) {
+						if (!error) {
+							sails.log.debug(data);
+						} else {
+							sails.log.error(error);
+						}
+					});
+				} else {
+					res.negotiate(err);
+				}
+			});
+    	} else {
+    		res.status(400).json({message: "Email is missing"});
+    	}
+    },
+
+    //reset the password
+    resetPassword: function(req, res){
+    	if(req.body.hash_key && req.body.password){
+    		User.resetPassword(req.body, function (err, user) {
+    			if (!err) {
+    				res.json("Password has been reset successfully.");
+    			} else {
+    				res.negotiate(err);
+    			}
+    		})
+    	} else {
+    		res.status(400).json({message: "Password or hashKey is missing"});
+    	}
+    },
+
     addOrUpdateAddress: function(req, res){
     	sails.log.debug('Address adding/updating initiated');
     	if(!req.body && !req.body.addresses){

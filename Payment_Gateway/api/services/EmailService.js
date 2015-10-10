@@ -30,3 +30,21 @@ exports.send = function(data, cb) {
 		}
 	});
 };
+
+exports.resetPassword = function(data, cb) {
+	var mail = {
+		from: 'A2B <noreply@a2b.com>',
+		to: data.email,
+		subject: 'A2B invitation to Reset Password',
+		template: 'resetpassword',
+		context: data
+	}
+
+	transporter.sendMail(mail, function(err, res){
+		if (err) { 
+			cb(err);
+		}else{
+			cb(null, res);
+		}
+	});
+};

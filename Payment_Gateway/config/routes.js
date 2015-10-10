@@ -43,6 +43,8 @@ module.exports.routes = {
   'GET /user/logout'                    : 'UserController.logout',
   'DELETE /user/:id'                    : 'UserController.delete',  
   'GET /user/activate/:random'          : 'UserController.signupActivate',
+  'POST /user/reset_password_initiate'  : 'UserController.resetPasswordInitiate',
+  'PUT /user/reset_password'            : 'UserController.resetPassword',
 
 
   // '/user/getUserProfile'        :           'UserController.getUserProfile',
