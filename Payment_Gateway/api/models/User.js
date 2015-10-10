@@ -39,9 +39,21 @@ module.exports = {
 			required : true
 		},
 
-		random_number: {
+		hash_key: {
 			type: 'string'
-		}
+		},
+
+		email_verification_token: {
+			type: 'string'
+		},
+
+		toJSON: function () {
+			var obj = this.toObject();
+			delete obj.password;
+			delete obj.hash_key;
+			delete obj.email_verification_token;
+			return obj;
+	    }
 
 	},
 
@@ -49,54 +61,32 @@ module.exports = {
 	add: function (data, callback) {
 		saltAndHash(data.password,function (hash) {
 	  		data.password = hash;
-	  		data.random_number = Math.floor((Math.random() * 100000) + 1);
+	  		data.email_verification_token = crypto.randomBytes(20).toString('hex');
+	  		data.hash_key = crypto.randomBytes(20).toString('hex');
 			User.create(data, function (err, user) {
 			   	if (err) {
 					callback(err);
 				} else {
-					delete user['password'];
 					callback(null, user);
 			 	}
 		  	});
 		});
-		// User.findOne({where: {email:data.email}}).exec(function (err, user) {
-	 //  		if (err) {
-	 //  			callback(err);
-	 //  		} else if(user){
-	 //  			callback("User Already exists", null);
-	 //  		} else {
-	 //  			saltAndHash(data.password,function (hash) {
-	 //  				data.password = hash;
-
-	 //  				User.create(data, function (err, user) {
-		// 			   	if (err) {
-		// 					callback(err);
-	 //  				 	} else {
-	 //  						delete user['password'];
-	 //  						callback(null, user);
-	 //  				 	}
-	 //  			  	});
-	 //  			});
-	 //      	}		
-	 //  	});
 	},
 
-	signupActivate: function (randamNumber, callback) {
-		User.find({where:{random_number: randamNumber}}).exec(function (err, user) {
+	signupActivate: function (emailVerificationToken, callback) {
+		User.findOne({where:{email_verification_token: emailVerificationToken}}).exec(function (err, user) {
 			if(err) {
 	  			callback(err);
-	  		} else if (user.length > 0) {
-				user.random_number = null;
-
-				User.update({id : user.id}, user, function (error, data) {
+	  		} else if (user) {
+				User.update({id : user.id}, {email_verified: true}, function (error, data) {
 					if(!error) {
-						callback(null, {status: 200, message: "Your account is activated successfully, please try to login"});
+						callback(null, {message: "Your account is activated successfully, please try to login"});
 					} else {
 						callback(error);
 					}
 				});
 			} else {
-				callback({status: 404, message: "Your account is already activated"});
+				callback({status: 404, message: "We could not find your account."});
 			}
 		});
 	},
@@ -107,14 +97,17 @@ module.exports = {
 	  		if(err) {
 	  			callback(err);
 	  		} else if (user) {
-	  			validatePassword(data.password, user.password, function (res) {
-					if (res) {
-						delete user['password'];
-						callback(null,user);
-					} else {
-						callback({status: 402, message: "Email or password does not match"});
-					}
-  				});
+	  			if (user.email_verified) {
+		  			validatePassword(data.password, user.password, function (res) {
+						if (res) {
+							callback(null,user);
+						} else {
+							callback({status: 402, message: "Email or password does not match"});
+						}
+	  				});
+		  		} else {
+		  			callback({status: 402, message: "Email yet to be verified"});
+		  		}
   			}
   			else{
   				callback({status: 402, message: "User does not exists"});
@@ -126,7 +119,6 @@ module.exports = {
 	profile:  function (id, callback) {
 		User.findOne({id : id}).exec(function (err, user){
 			if(!err) {
-				delete user['password'];				
 				callback(null , user);
 			} else {
 				callback(err);
@@ -147,7 +139,6 @@ module.exports = {
 				if (user.length == 0) {
 					callback({status: 402, message: "User not found"});
 				} else {
-					delete data['password'];
 					callback(null, user[0]);
 				}
 			} else {

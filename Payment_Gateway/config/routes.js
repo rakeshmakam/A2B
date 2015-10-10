@@ -36,25 +36,24 @@ module.exports.routes = {
     view: 'homepage'
   },
 
-  'POST /api/user/signup'           : 'UserController.add',
-  'GET /api/user'                   : 'UserController.profile',
-  'PUT /api/user'                   : 'UserController.edit',
-  'POST /api/user/login'            : 'UserController.login',
-  'GET /api/user/logout'            : 'UserController.logout',
-  'DELETE /api/user/:id'            : 'UserController.delete',  
-  'GET /api/signupactivate/:randam' : 'UserController.signupActivate',
-  // 'PUT /api/user/reset_password'    : 'UserController.resetPassword'
+  'POST /user/signup'                   : 'UserController.add',
+  'GET /user'                           : 'UserController.profile',
+  'PUT /user'                           : 'UserController.edit',
+  'POST /user/login'                    : 'UserController.login',
+  'GET /user/logout'                    : 'UserController.logout',
+  'DELETE /user/:id'                    : 'UserController.delete',  
+  'GET /user/activate/:random'          : 'UserController.signupActivate',
 
 
-  // '/api/user/getUserProfile'        :           'UserController.getUserProfile',
-  // '/api/user/getUserBills'          :           'UserController.getUserBills',
-  'POST /api/user/address'          :           'UserController.addOrUpdateAddress',
-  // 'DELETE /api/user/address'        :           'UserController.deleteAddress'
-  // '/api/user/getUserPurchases'      :           'UserController.getUserPurchases',
-  'POST /api/user/authorizeUser'    :           'UserController.userAuthorization',
-  'POST /api/user/makePayment'      :           'UserController.userPayment',
+  // '/user/getUserProfile'        :           'UserController.getUserProfile',
+  // '/user/getUserBills'          :           'UserController.getUserBills',
+  'POST /user/address'          :           'UserController.addOrUpdateAddress',
+  // 'DELETE /user/address'        :           'UserController.deleteAddress'
+  // '/user/getUserPurchases'      :           'UserController.getUserPurchases',
+  'POST /user/authorizeUser'    :           'UserController.userAuthorization',
+  'POST /user/makePayment'      :           'UserController.userPayment',
 
-  'POST /api/merchant'              :           'MerchantController.add',
+  'POST /merchant'              :           'MerchantController.add',
 
 
   /***************************************************************************

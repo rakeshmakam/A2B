@@ -9,11 +9,12 @@ var jwt = require('jsonwebtoken');
 module.exports = {
 	// Add user
 	add: function (req, res) {
-		User.add(req.body, function(err, user){
+		var reqData = {full_name: req.body.full_name, email: req.body.email, phone_num: req.body.phone_num, password: req.body.password}
+		User.add(reqData, function(err, user){
 			if (err) {
-				res.serverError(err);
+				res.negotiate(err);
 			} else {
-				res.ok({message: "Thank you for signing up with us"});
+				res.json({message: "Thank you for signing up with us"});
 
 				EmailService.send(user, function(error, data){
 					if (!error) {
@@ -24,29 +25,10 @@ module.exports = {
 				});
 			}
 		});
-		// if (!req.body && !req.body.full_name && !req.body.email && !req.body.phone_num && !req.body.userPassword) {
-		// 	res.badRequest('Email or password missing in request');
-		// } else {
-		// 	User.add(req.body, function(err, user){
-		// 		if (err) {
-		// 			res.serverError(err);
-		// 		} else {
-		// 			res.ok({message: "Thank you for signing up with us"});
-
-		// 			EmailService.send(user, function(error, data){
-		// 				if (!error) {
-		// 					sails.log.debug(data);
-		// 				} else {
-		// 					sails.log.error(error);
-		// 				}
-		// 			});
-		// 		}
-		// 	});
-		// }
 	},
 
 	signupActivate: function (req, res) {
-		User.signupActivate(req.param('randam'), function (err, data) {
+		User.signupActivate(req.param('random'), function (err, data) {
 			if (!err) {
 				res.json(data);
 			} else { 
@@ -62,7 +44,7 @@ module.exports = {
 		} else {
 			User.login(req.body, function (err, user) {
 				if (err) {
-					res.serverError(err);
+					res.negotiate(err);
 				} else {
 					var token = jwt.sign(user, 'secret', {expiresIn: 1296000}); //15 days
 					user.token = token;
