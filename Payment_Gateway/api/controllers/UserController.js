@@ -153,38 +153,56 @@ module.exports = {
     		}else{
     			var dataToBeSigned = {
 		    		user_id: userId,
-		    		cart_value : req.body.cartValue,
+		    		merchant_id: req.body.merchantId,
 		    		amount: req.body.amount,
-		    		merchant_id: req.body.merchantId
+		    		currency : req.body.currency
 		    	};
-				var token = jwt.sign(dataToBeSigned, 'secret', {expiresIn: 120}); //2 minutes
-				sails.log.debug('Generated user authorization token');
-				res.json({userAuthToken: token});
+
+		    	res.json({userToken: "ABC123"});
+		    	//call java api
     		}
     	});
     },
 
     userPayment: function(req, res){
     	sails.log.debug('user payment initiated');
-    	var merchantKey = req.body.merchantAuthKey;
-    	Merchants.authorizePayment(merchantKey, function(err, merchantData){
+    	var encodedAuth = req.headers.authorization.substr(6,req.headers.authorization.length-1);
+    	var decoded = new Buffer(encodedAuth,"base64").toString();
+    	
+    	var usn = decoded.substr(0,decoded.indexOf(':'));
+    	var pwd = decoded.substr(decoded.indexOf(':')+1,decoded.length-1);
+
+    	var merchantCredentials = {
+    		merchantId : usn,
+    		merchantKey : pwd
+    	};
+
+    	Merchants.authorizePayment(merchantCredentials, function(err, merchantData){
     		if(err){
     			res.serverError(err);
     		}else{
+    			var validUserReq = null;
     			if(merchantData.status == true){
-    				var set = '0123456789abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ';
-					var transaction_id = '';
-				  	for (var i = 0; i < 20; i++) {
-				    	var p = Math.floor(Math.random() * set.length);
-				    	transaction_id += set[p];
-				  	}
+		 			//var set = '0123456789abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ';
+					// var transaction_id = '';
+				 //  	for (var i = 0; i < 20; i++) {
+				 //    	var p = Math.floor(Math.random() * set.length);
+				 //    	transaction_id += set[p];
+				 //  	}
 	    			var transactionRequest = {
 	    				merchantId: merchantData.merchant_id,
 	    				merchant: merchantData.merchant_name,
+	    				userId: req.user.id,
 	    				currency: req.body.currency,
 	    				amount: req.body.amount,
-	    				itemName: req.body.item_name,
-	    				transactionId: transaction_id,
+	    				description: req.body.description,
+	    				metaData: req.body.metadata,
+	    				reciptEmail: req.body.recipt_email,
+	    				reciptNumber: req.body.recipt_number,
+	    				shippingInfo: req.body.shipping_info,
+	    				statementDescriptor: req.body.statement_descriptor,
+	    				status: req.body.status,
+	    				// transactionId: transaction_id,
 	    				merchantTransactionId : req.body.merchant_transaction_id
 	    			};
 
