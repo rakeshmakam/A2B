@@ -88,18 +88,14 @@ module.exports.http = {
 module.exports = {
   http:{
     customMiddleware: function(app){
-      // We are going to protect /api routes with JWT
       app.use(expressJwt({secret: 'secret'}).unless({path: [
-          '/api/user/signup',
-          '/api/user/login',
-          '/api/merchant',
-          '/api/user/makePayment',
-          '/^\/signupactivate\/',
-          /^\/styles\/.*/ ,
-          /^\/js\/.*/,
-          /^\/images\/.*/,
-          '/favicon.ico',
-          /^\/fonts\/.*/
+          '/user/signup',
+          '/user/login',
+          '/merchant',
+          '/user/makePayment/',
+          '/user/reset_password_initiate',
+          '/user/reset_password',
+          /^\/user\/activate\/.*/
       ]}));
     }
   }
