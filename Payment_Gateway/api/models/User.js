@@ -33,6 +33,34 @@ module.exports = {
 			size: 50
 		},
 
+		address_line1: {
+			type: "string",
+			required : true,
+			size: 200
+		},
+
+		address_line2: {
+			type: "string",
+			size: 200
+		},
+
+		address_line3: {
+			type: "string",
+			size: 200
+		},
+
+		city: {
+			type: "string",
+			required : true,
+			size: 100
+		},
+
+		pinCode: {
+			type: "integer",
+			required : true,
+			size: 6
+		},
+
 		email_verified: {
 			type : 'boolean',
 			defaultsTo : false,
@@ -45,6 +73,12 @@ module.exports = {
 
 		email_verification_token: {
 			type: 'string'
+		},
+
+		currency: {
+			type: 'string',
+			defaultsTo : 'INR',
+			required : true
 		},
 
 		toJSON: function () {
@@ -80,7 +114,7 @@ module.exports = {
 	  		} else if (user) {
 				User.update({id : user.id}, {email_verified: true}, function (error, data) {
 					if(!error) {
-						callback(null, {message: "Your account is activated successfully, please try to login"});
+						callback(null, data);
 					} else {
 						callback(error);
 					}
