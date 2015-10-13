@@ -91,8 +91,9 @@ module.exports = {
       app.use(expressJwt({secret: 'secret'}).unless({path: [
           '/user/signup',
           '/user/login',
-          '/merchant',
-          '/user/makePayment/',
+          '/check',
+          // '/merchant',
+          // '/user/makePayment/',
           '/user/reset_password_initiate',
           '/user/reset_password',
           /^\/user\/activate\/.*/

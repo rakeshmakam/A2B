@@ -55,8 +55,8 @@ module.exports.routes = {
   'POST /user/authorizeUser'    :           'UserController.userAuthorization',
   'POST /user/makePayment'      :           'UserController.userPayment',
 
-  'POST /merchant'              :           'MerchantController.add',
-
+  // 'POST /merchant'              :           'MerchantController.add',
+  'GET /check'  : 'UserController.check'
 
   /***************************************************************************
   *                                                                          *
