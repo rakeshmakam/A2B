@@ -27,6 +27,7 @@
     "nodemailer-express-handlebars": "0.0.3",
     "nodemailer-smtp-transport": "^1.0.2",
     "rc": "~0.5.0",
+    "request": "^2.65.0",
     "request-promise": "*",
     "sails": "~0.11.0",
     "sails-disk": "~0.10.0",

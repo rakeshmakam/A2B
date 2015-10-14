@@ -6,7 +6,8 @@
  */
 var jwt = require('jsonwebtoken');
 var Client = require('node-rest-client').Client;
-var baseUrl = "localhost:8080";
+var baseUrl = "http://localhost:8080";
+var request = require('request');
 
 module.exports = {
 	// Add user
@@ -27,8 +28,8 @@ module.exports = {
 							} else {
 								// res.json({message: "Thank you for signing up with us"});
 								var client = new Client();
-				    			var encodedStr = new Buffer(process.env.USERNAME+":"+process.env.PASSWORD).toString('base64');
-
+				    			var encodedStr = new Buffer("admin:admin").toString('base64');
+ 
 								var args = {
 				    				data: {
 							    		userId: user.id,
@@ -40,12 +41,13 @@ module.exports = {
 							    	} 
 				    			};
 				    			sails.log.debug("args", args);
-								client.post(baseUrl+"/admin/user", args, function(error, data){
+								request.post(baseUrl+"/admin/user", args, function(error, response, body){
+									sails.log.debug("data", body);
+									sails.log.debug("response", response);
+									sails.log.debug("error", error);
 				    				if (!error) {
-				    					sails.log.debug("data", data);
 				    					res.json({message: "Your account is activated successfully, please try to login"});
 				    				} else {
-				    					sails.log.debug("error", error);
 				    					res.negotiate(error);
 				    				}
 				    			});
@@ -229,7 +231,7 @@ module.exports = {
     		}else if(merchantDetails == false){
     			res.status(401).json({msg : 'Merchant not registered'});
     		}else{
-    			var encodedStr = new Buffer(process.env.USERNAME+":"+process.env.PASSWORD).toString('base64');
+    			var encodedStr = new Buffer(process.env.NODEUSERNAME+":"+process.env.NODEPASSWORD).toString('base64');
     			var client = new Client();
 
     			var args = {
@@ -240,7 +242,7 @@ module.exports = {
 			    		currency : req.body.currency
 			    	},
 			    	headers:{
-			    		"Authorization": "Basic "+encodedStr,
+			    		"Authorization": "Basic YWRtaW46YWRtaW4=",
 			    		"Content-Type": "application/json"
 			    	}
     			};
