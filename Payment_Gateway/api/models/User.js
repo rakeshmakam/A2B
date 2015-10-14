@@ -22,7 +22,7 @@ module.exports = {
 		},
 
 		roles: {
-			type:'string',
+			type:'array',
 			defaultsTo: 'ROLE_USER',
 			required : true
 		},
