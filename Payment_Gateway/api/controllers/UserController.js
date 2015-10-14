@@ -6,7 +6,7 @@
  */
 var jwt = require('jsonwebtoken');
 var Client = require('node-rest-client').Client;
-var baseUrl = "http://52.11.231.112:8080";
+var baseUrl = "localhost:8080";
 
 module.exports = {
 	// Add user
@@ -283,7 +283,7 @@ module.exports = {
     			};
 
     			//Call Java API
-    			client.post("http://52.11.231.112:8080/admin/merchant/charge",args,function(data, response){
+    			client.post(baseUrl+"/admin/merchant/charge",args,function(data, response){
     				res.json({paymentResponse:response});
     			});
     		}
