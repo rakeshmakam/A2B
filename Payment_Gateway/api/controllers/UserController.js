@@ -25,15 +25,35 @@ module.exports = {
 							if (e) {
 								res.negotiate(e);
 							} else {
-								res.json({message: "Thank you for signing up with us"});
+								// res.json({message: "Thank you for signing up with us"});
+								var client = new Client();
+				    			var encodedStr = new Buffer(process.env.USERNAME+":"+process.env.PASSWORD).toString('base64');
 
-								EmailService.send(user.emailId, {'emailVerificationToken' : result.emailVerificationToken}, function(error, data){
-									if (!error) {
-										sails.log.debug(data);
-									} else {
-										sails.log.error(error);
-									}
-								});
+								var args = {
+				    				data: {
+							    		userId: user.id,
+										currency: user.currency
+							    	},
+							    	headers:{
+							    		"authorization": "Basic "+encodedStr,
+							    		"Content-Type": "application/json"
+							    	} 
+				    			};
+				    			sails.log.debug(args);
+								client.post(baseUrl+"/admin/user", args, function(error, data){
+				    				if (!error) {
+				    					res.json({message: "Your account is activated successfully, please try to login"});
+				    				} else {
+				    					res.negotiate(error);
+				    				}
+				    			});
+								// EmailService.send(user.emailId, {'emailVerificationToken' : result.emailVerificationToken}, function(error, data){
+								// 	if (!error) {
+								// 		sails.log.debug(data);
+								// 	} else {
+								// 		sails.log.error(error);
+								// 	}
+								// });
 							}
 						});
 					}

@@ -97,7 +97,7 @@ module.exports = {
 	  		if(err) {
 	  			callback(err);
 	  		} else if (user) {
-	  			if (user.emailVerified) {
+	  			// if (user.emailVerified) {
 		  			validatePassword(data.password, user.password, function (res) {
 						if (res) {
 							callback(null,user);
@@ -105,9 +105,9 @@ module.exports = {
 							callback({status: 402, message: "Email or password does not match"});
 						}
 	  				});
-		  		} else {
-		  			callback({status: 402, message: "Email yet to be verified"});
-		  		}
+		  		// } else {
+		  		// 	callback({status: 402, message: "Email yet to be verified"});
+		  		// }
   			}
   			else{
   				callback({status: 402, message: "User does not exists"});
