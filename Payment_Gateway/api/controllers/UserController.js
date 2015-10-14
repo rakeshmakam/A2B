@@ -28,7 +28,7 @@ module.exports = {
 								// res.json({message: "Thank you for signing up with us"});
 								var client = new Client();
 				    			var encodedStr = new Buffer(process.env.USERNAME+":"+process.env.PASSWORD).toString('base64');
-
+ 
 								var args = {
 				    				data: {
 							    		userId: user.id,
@@ -229,7 +229,7 @@ module.exports = {
     		}else if(merchantDetails == false){
     			res.status(401).json({msg : 'Merchant not registered'});
     		}else{
-    			var encodedStr = new Buffer(process.env.USERNAME+":"+process.env.PASSWORD).toString('base64');
+    			var encodedStr = new Buffer(process.env.NODEUSERNAME+":"+process.env.NODEPASSWORD).toString('base64');
     			var client = new Client();
 
     			var args = {
@@ -240,7 +240,7 @@ module.exports = {
 			    		currency : req.body.currency
 			    	},
 			    	headers:{
-			    		"Authorization": "Basic "+encodedStr,
+			    		"Authorization": "Basic YWRtaW46YWRtaW4=",
 			    		"Content-Type": "application/json"
 			    	}
     			};
