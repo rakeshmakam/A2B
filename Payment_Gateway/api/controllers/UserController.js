@@ -6,7 +6,7 @@
  */
 var jwt = require('jsonwebtoken');
 var Client = require('node-rest-client').Client;
-var baseUrl = "localhost:8080";
+var baseUrl = "http://localhost:8080";
 
 module.exports = {
 	// Add user
