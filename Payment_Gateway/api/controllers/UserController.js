@@ -25,7 +25,6 @@ module.exports = {
 							if (e) {
 								res.negotiate(e);
 							} else {
-								// res.json({message: "Thank you for signing up with us"});
 								var client = new Client();
 				    			var encodedStr = new Buffer("admin:admin").toString('base64');
  
@@ -39,14 +38,11 @@ module.exports = {
 							    		"Content-Type": "application/json"
 							    	} 
 				    			};
-				    			sails.log.debug("args", args);
 								client.post(baseUrl+"/admin/user", args, function(data, resp){
-									sails.log.debug("data", data);
-									sails.log.debug("error", error);
-				    				if (!error) {
-				    					res.json({message: "Your account is activated successfully, please try to login"});
+				    				if (data.error) {
+				    					res.json({error: data.error, message: data.message});
 				    				} else {
-				    					res.negotiate(error);
+				    					res.json({message: "Your account is activated successfully, please try to login"});
 				    				}
 				    			});
 								// EmailService.send(user.emailId, {'emailVerificationToken' : result.emailVerificationToken}, function(error, data){
