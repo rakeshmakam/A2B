@@ -89,11 +89,12 @@ module.exports = {
   http:{
     customMiddleware: function(app){
       app.use(expressJwt({secret: 'secret'}).unless({path: [
+          '/',
           '/user/signup',
           '/user/login',
           '/check',
           // '/merchant',
-          // '/user/makePayment/',
+          '/user/makePayment/',
           '/user/reset_password_initiate',
           '/user/reset_password',
           /^\/user\/activate\/.*/
