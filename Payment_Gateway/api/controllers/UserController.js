@@ -7,8 +7,8 @@
 var jwt = require('jsonwebtoken');
 var Client = require('node-rest-client').Client;
 var baseUrl = "http://localhost:8080";
-var NODEUSERNAME = admin;
-var NODEPASSWORD = admin;
+var NODEUSERNAME = 'admin';
+var NODEPASSWORD = 'admin';
 module.exports = {
 	// Add user
 	add: function (req, res) {
@@ -27,7 +27,7 @@ module.exports = {
 								res.negotiate(e);
 							} else {
 								var client = new Client();
-				    			var encodedStr = new Buffer(NODEUSERNAME+":"NODEPASSWORD).toString('base64');
+				    			var encodedStr = new Buffer(NODEUSERNAME+":"+NODEPASSWORD).toString('base64');
  
 								var args = {
 				    				data: {
@@ -66,7 +66,7 @@ module.exports = {
 			if (!err) {
 
 				var client = new Client();
-    			var encodedStr = new Buffer(NODEUSERNAME+":"NODEPASSWORD).toString('base64');
+    			var encodedStr = new Buffer(NODEUSERNAME+":"+NODEPASSWORD).toString('base64');
 
 				var args = {
     				data: {
@@ -226,7 +226,7 @@ module.exports = {
     		}else if(merchantDetails == false){
     			res.status(401).json({msg : 'Merchant not registered'});
     		}else{
-    			var encodedStr = new Buffer(NODEUSERNAME+":"NODEPASSWORD).toString('base64');
+    			var encodedStr = new Buffer(NODEUSERNAME+":"+NODEPASSWORD).toString('base64');
     			var client = new Client();
 
     			var args = {
