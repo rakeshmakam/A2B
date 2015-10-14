@@ -39,11 +39,13 @@ module.exports = {
 							    		"Content-Type": "application/json"
 							    	} 
 				    			};
-				    			sails.log.debug(args);
+				    			sails.log.debug("args", args);
 								client.post(baseUrl+"/admin/user", args, function(error, data){
 				    				if (!error) {
+				    					sails.log.debug("data", data);
 				    					res.json({message: "Your account is activated successfully, please try to login"});
 				    				} else {
+				    					sails.log.debug("error", error);
 				    					res.negotiate(error);
 				    				}
 				    			});

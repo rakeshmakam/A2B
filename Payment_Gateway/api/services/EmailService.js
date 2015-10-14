@@ -9,8 +9,8 @@ var options = {
     }
 }
 
-var transporter = nodemailer.createTransport(options);
-transporter.use('compile', hbs({viewEngine: 'ejs', viewPath: 'views', extName: '.ejs'}));
+// var transporter = nodemailer.createTransport(options);
+// transporter.use('compile', hbs({viewEngine: 'ejs', viewPath: 'views', extName: '.ejs'}));
 
 exports.send = function(emailId, data, cb) {
 	sails.log.debug(data, emailId);

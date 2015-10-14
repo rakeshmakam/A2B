@@ -91,8 +91,6 @@ module.exports = {
 
 	// Login 
 	login: function (data, callback) {
-		console.log(data);
-		console.log(data.email);
 		User.findOne({where:{emailId: data.email}}).populateAll().exec(function (err, user) {
 	  		if(err) {
 	  			callback(err);
