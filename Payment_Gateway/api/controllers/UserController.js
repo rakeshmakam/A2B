@@ -27,7 +27,7 @@ module.exports = {
 							} else {
 								// res.json({message: "Thank you for signing up with us"});
 								var client = new Client();
-				    			var encodedStr = new Buffer(process.env.NODEUSERNAME+":"+process.env.NODEPASSWORD).toString('base64');
+				    			var encodedStr = new Buffer("admin:admin").toString('base64');
  
 								var args = {
 				    				data: {
