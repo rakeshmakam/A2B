@@ -199,6 +199,23 @@ module.exports = {
 		});
     },
 
+    checkMerchantAuthorization: function(merchantCreds, callback){
+		User.findOne({id: merchantCreds.merchantId, password: merchantCreds.merchantKey}).exec(function(err, merchantRecord){
+			if(err){
+				callback(err, null);
+			}else if(merchantRecord){
+				if(_.contains(merchantRecord.roles, "ROLE_MERCHANT")){
+					merchantRecord.status = true;
+					callback(null, merchantRecord);
+				}else{
+					callback(null, 'unknown')
+				}
+			}else{
+				callback(null, 'unregistered');
+			}
+		});
+	}
+
 };
 
 var generateSalt = function(){
