@@ -42,10 +42,9 @@ module.exports = {
 				    			};
 				    			sails.log.debug("args", args);
 								request.post(baseUrl+"/admin/user", args, function(error, response, body){
-									sails.log.debug("data", body);
-									sails.log.debug("response", response);
+									sails.log.debug("body", body);
 									sails.log.debug("error", error);
-				    				if (!error) {
+				    				if (!error && response.statusCode == 200) {
 				    					res.json({message: "Your account is activated successfully, please try to login"});
 				    				} else {
 				    					res.negotiate(error);
