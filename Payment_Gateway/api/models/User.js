@@ -9,22 +9,34 @@ var crypto = require('crypto');
 module.exports = {
 
 	attributes: {
-		full_name: {
+		fullName: {
 			type:'string',
-			required : true,
+			required : true
 		},
 
-		email: {
+		emailId: {
 			type: "string",
 			required : true,
 			unique: true,
 			size: 100
 		},
 
-		phone_num: {
+		roles: {
+			type:'string',
+			defaultsTo: 'ROLE_USER',
+			required : true
+		},
+
+		phoneNumber: {
 			type:'string',
 			required : true,
 			size:10
+		},
+
+		phoneVerified: {
+			type : 'boolean',
+			defaultsTo : false,
+			required : true
 		},
 
 		password: {
@@ -33,59 +45,31 @@ module.exports = {
 			size: 50
 		},
 
-		address_line1: {
-			type: "string",
-			required : true,
-			size: 200
+		billingAddressId: {
+			collection: 'Address',
+			via: 'user'
 		},
 
-		address_line2: {
-			type: "string",
-			size: 200
-		},
-
-		address_line3: {
-			type: "string",
-			size: 200
-		},
-
-		city: {
-			type: "string",
-			required : true,
-			size: 100
-		},
-
-		pinCode: {
-			type: "integer",
-			required : true,
-			size: 6
-		},
-
-		email_verified: {
+		emailVerified: {
 			type : 'boolean',
 			defaultsTo : false,
 			required : true
 		},
 
-		hash_key: {
-			type: 'string'
-		},
-
-		email_verification_token: {
-			type: 'string'
-		},
-
 		currency: {
 			type: 'string',
-			defaultsTo : 'INR',
+			defaultsTo : 'inr',
 			required : true
+		},
+
+		activate: {
+			collection: 'Activate',
+			via: 'user'
 		},
 
 		toJSON: function () {
 			var obj = this.toObject();
 			delete obj.password;
-			delete obj.hash_key;
-			delete obj.email_verification_token;
 			return obj;
 	    }
 
@@ -95,8 +79,6 @@ module.exports = {
 	add: function (data, callback) {
 		saltAndHash(data.password,function (hash) {
 	  		data.password = hash;
-	  		data.email_verification_token = crypto.randomBytes(20).toString('hex');
-	  		data.hash_key = crypto.randomBytes(20).toString('hex');
 			User.create(data, function (err, user) {
 			   	if (err) {
 					callback(err);
@@ -107,31 +89,15 @@ module.exports = {
 		});
 	},
 
-	signupActivate: function (emailVerificationToken, callback) {
-		User.findOne({where:{email_verification_token: emailVerificationToken}}).exec(function (err, user) {
-			if(err) {
-	  			callback(err);
-	  		} else if (user) {
-				User.update({id : user.id}, {email_verified: true}, function (error, data) {
-					if(!error) {
-						callback(null, data);
-					} else {
-						callback(error);
-					}
-				});
-			} else {
-				callback({status: 404, message: "We could not find your account."});
-			}
-		});
-	},
-
 	// Login 
 	login: function (data, callback) {
-		User.findOne({where:{email:data.email}}).exec(function (err, user) {
+		console.log(data);
+		console.log(data.email);
+		User.findOne({where:{emailId: data.email}}).populateAll().exec(function (err, user) {
 	  		if(err) {
 	  			callback(err);
 	  		} else if (user) {
-	  			if (user.email_verified) {
+	  			if (user.emailVerified) {
 		  			validatePassword(data.password, user.password, function (res) {
 						if (res) {
 							callback(null,user);

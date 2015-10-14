@@ -11,18 +11,31 @@ var baseUrl = "http://52.11.231.112:8080";
 module.exports = {
 	// Add user
 	add: function (req, res) {
-		var reqData = {full_name: req.body.full_name, email: req.body.email, phone_num: req.body.phone_num, password: req.body.password}
+		var reqData = {fullName: req.body.full_name, emailId: req.body.email, phoneNumber: req.body.phone_num, password: req.body.password}
 		User.add(reqData, function(err, user){
 			if (err) {
 				res.negotiate(err);
 			} else {
-				res.json({message: "Thank you for signing up with us"});
-
-				EmailService.send(user, function(error, data){
-					if (!error) {
-						sails.log.debug(data);
+				var address = {user: user.id, addressLine1: req.body.address_line1, addressLine2: req.body.address_line2, addressLine3: req.body.address_line3, city: req.body.city, pinCode: req.body.pinCode}
+				Address.add(address, function(e, resp){
+					if (e) {
+						res.negotiate(e);
 					} else {
-						sails.log.error(error);
+						Activate.add({user: user.id}, function (e, result) {
+							if (e) {
+								res.negotiate(e);
+							} else {
+								res.json({message: "Thank you for signing up with us"});
+
+								EmailService.send(user.emailId, {'emailVerificationToken' : result.emailVerificationToken}, function(error, data){
+									if (!error) {
+										sails.log.debug(data);
+									} else {
+										sails.log.error(error);
+									}
+								});
+							}
+						});
 					}
 				});
 			}
@@ -30,20 +43,28 @@ module.exports = {
 	},
 
 	signupActivate: function (req, res) {
-		User.signupActivate(req.param('random'), function (err, user) {
+		Activate.signup(req.param('random'), function (err, user) {
 			if (!err) {
-				var client = new Client();
-				var user = {
-					userId: user.email,
-					currency: user.currency
-				}
 
-				client.post(baseUrl+"/admin/user", user, function(error, data){
-    				sails.log.debug(error);
+				var client = new Client();
+    			var encodedStr = new Buffer(process.env.USERNAME+":"+process.env.PASSWORD).toString('base64');
+
+				var args = {
+    				data: {
+			    		userId: user[0].id,
+						currency: user[0].currency
+			    	},
+			    	headers:{
+			    		"authorization": "Basic "+encodedStr,
+			    		"Content-Type": "application/json"
+			    	} 
+    			};
+
+				client.post(baseUrl+"/admin/user", args, function(error, data){
     				if (!error) {
     					res.json({message: "Your account is activated successfully, please try to login"});
     				} else {
-    					res.negotiate(err);
+    					res.negotiate(error);
     				}
     			});
 			} else { 
@@ -147,7 +168,7 @@ module.exports = {
 
     //reset the password
     resetPassword: function(req, res){
-    	if(req.body.hash_key && req.body.password){
+    	if(req.body.hashKey && req.body.password){
     		User.resetPassword(req.body, function (err, user) {
     			if (!err) {
     				res.json("Password has been reset successfully.");
