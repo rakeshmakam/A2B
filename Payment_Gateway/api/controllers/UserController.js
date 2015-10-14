@@ -199,42 +199,43 @@ module.exports = {
 			    	headers:{
 			    		"Authorization": "Basic "+encodedStr,
 			    		"Content-Type": "application/json"
-			    	} 
+			    	}
     			};
 
     			client.post(baseUrl+"/admin/user/authToken",args,function(data, response){
-    				sails.log.debug(data);
-    				// sails.log.debug(response);
-    				// res.json({Resp:response, Data: data});
-    				res.send(response);
+    				// sails.log.debug(data);
+    				if(data.error){
+    					res.json({error: data.error, message: data.message});
+    				}else if(data.token){
+    					res.json({userToken: data.token});
+    				}
     			});
-
-		    	// res.json({userToken: "ABC123"});
-		    	//call java api
     		}
     	});
     },
 
     userPayment: function(req, res){
     	sails.log.debug('user payment initiated');
-    	// var encodedAuth = req.headers.authorization.substr(6,req.headers.authorization.length-1);
-    	// var decoded = new Buffer(encodedAuth,"base64").toString();
+    	var encodedAuth = req.headers.authorization.substr(6,req.headers.authorization.length-1);
+    	var decoded = new Buffer(encodedAuth,"base64").toString();
     	
-    	// var usn = decoded.substr(0,decoded.indexOf(':'));
-    	// var pwd = decoded.substr(decoded.indexOf(':')+1,decoded.length-1);
+    	var usn = decoded.substr(0,decoded.indexOf(':'));
+    	var pwd = decoded.substr(decoded.indexOf(':')+1,decoded.length-1);
 
-    	// var merchantCredentials = {
-    	// 	merchantId : usn,
-    	// 	merchantKey : pwd
-    	// };
+    	var merchantCredentials = {
+    		merchantId : usn,
+    		merchantKey : pwd
+    	};
     	
     	//Check if merchant is legitimate
-    	Merchant.validateMerchant(req.body.merchantId, function(err, merchantDetails){
+    	User.checkMerchantAuthorization(merchantCredentials, function(err, merchantDetails){
     		if(err){
     			res.serverError(err);
-    		}else if(merchantDetails == false){
+    		}else if(merchantDetails == 'unknown'){
+    			res.status(403).json({msg : 'Unknown merchant credentials'});
+    		}else if(merchantDetails == 'unregistered'){
     			res.status(401).json({msg : 'Merchant not registered'});
-    		}else{
+    		}else if(merchantDetails.status == true){
     			var encodedStr = new Buffer(process.env.USERNAME+":"+process.env.PASSWORD).toString('base64');
     			var client = new Client();
 
@@ -262,14 +263,14 @@ module.exports = {
     			};
 
     			//Call Java API
-    			client.post("http://52.11.231.112:8080/admin/merchant/charge",args,function(data, response){
-    				res.json({paymentResponse:response});
+    			client.post(baseUrl+"/merchant/charge",args,function(data, response){
+    				res.json({paymentResponse:data});
     			});
     		}
     	});
     },
 
-    check:function(req, res){
-    	res.json({env: process.env});
-    }
+    // check:function(req, res){
+    // 	res.json({env: process.env});
+    // }
 };

@@ -56,7 +56,7 @@ module.exports.routes = {
   'POST /user/makePayment'      :           'UserController.userPayment',
 
   // 'POST /merchant'              :           'MerchantController.add',
-  'GET /check'  : 'UserController.check'
+  // 'GET /check'  : 'UserController.check'
 
   /***************************************************************************
   *                                                                          *
