@@ -7,6 +7,7 @@
 var jwt = require('jsonwebtoken');
 var Client = require('node-rest-client').Client;
 var baseUrl = "http://localhost:8080";
+var request = require('request');
 
 module.exports = {
 	// Add user
@@ -40,12 +41,13 @@ module.exports = {
 							    	} 
 				    			};
 				    			sails.log.debug("args", args);
-								client.post(baseUrl+"/admin/user", args, function(error, data){
+								request.post(baseUrl+"/admin/user", args, function(error, response, body){
+									sails.log.debug("data", body);
+									sails.log.debug("response", response);
+									sails.log.debug("error", error);
 				    				if (!error) {
-				    					sails.log.debug("data", data);
 				    					res.json({message: "Your account is activated successfully, please try to login"});
 				    				} else {
-				    					sails.log.debug("error", error);
 				    					res.negotiate(error);
 				    				}
 				    			});
