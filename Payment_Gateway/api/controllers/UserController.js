@@ -212,13 +212,13 @@ module.exports = {
 
     			var args = {
     				data: {
-			    		userId: '5618f029d4c6ef6543d6d42a',
+			    		userId: req.user.id,
 			    		merchantId: req.body.merchantId,
 			    		amount: req.body.amount,
 			    		currency : req.body.currency
 			    	},
 			    	headers:{
-			    		"authorization": "Basic "+encodedStr,
+			    		"Authorization": "Basic "+encodedStr,
 			    		"Content-Type": "application/json"
 			    	} 
     			};
@@ -248,52 +248,44 @@ module.exports = {
     	// 	merchantId : usn,
     	// 	merchantKey : pwd
     	// };
-
-    	Merchants.authorizePayment(merchantCredentials, function(err, merchantData){
+    	
+    	//Check if merchant is legitimate
+    	Merchant.validateMerchant(req.body.merchantId, function(err, merchantDetails){
     		if(err){
     			res.serverError(err);
+    		}else if(merchantDetails == false){
+    			res.status(401).json({msg : 'Merchant not registered'});
     		}else{
-    			var validUserReq = null;
-    			if(merchantData.status == true){
-    				var encodedStr = new Buffer(process.env.USERNAME+":"+process.env.PASSWORD).toString('base64');
-	    			var client = new Client();
+    			var encodedStr = new Buffer(process.env.USERNAME+":"+process.env.PASSWORD).toString('base64');
+    			var client = new Client();
 
-	    			var args = {
-	    				data: {
-				    		merchantId: merchantData.merchant_id,
-		    				merchant: merchantData.merchant_name,
-		    				userId: req.user.id,
-		    				currency: req.body.currency,
-		    				amount: req.body.amount,
-		    				description: req.body.description,
-		    				metaData: req.body.metadata,
-		    				reciptEmail: req.body.recipt_email,
-		    				reciptNumber: req.body.recipt_number,
-		    				shippingInfo: req.body.shipping_info,
-		    				statementDescriptor: req.body.statement_descriptor,
-		    				status: req.body.status,
-		    				// transactionId: transaction_id,
-		    				merchantTransactionId : req.body.merchant_transaction_id,
-		    				userAuthToken: req.body.user_token
-				    	},
-				    	headers:{
-				    		"authorization": "Basic "+encodedStr,
-				    		"Content-Type": "application/json"
-				    	} 
-	    			};
+    			var args = {
+    				data: {
+			    		merchantId: req.body.merchant_id,
+	    				userId: req.user.id,
+	    				currency: req.body.currency,
+	    				amount: req.body.amount,
+	    				description: req.body.description,
+	    				metaData: req.body.metadata,
+	    				reciptEmail: req.body.recipt_email,
+	    				reciptNumber: req.body.recipt_number,
+	    				shippingInfo: req.body.shipping_info,
+	    				statementDescriptor: req.body.statement_descriptor,
+	    				status: req.body.status,
+	    				// transactionId: transaction_id,
+	    				merchantTransactionId : req.body.merchant_transaction_id,
+	    				userAuthToken: req.body.user_token
+			    	},
+			    	headers:{
+			    		"authorization": "Basic "+encodedStr,
+			    		"Content-Type": "application/json"
+			    	} 
+    			};
 
-	    			// client.post("http://52.11.231.112:8080/admin/user/authToken",args,function(data, response){
-	    			// 	sails.log.debug(data);
-	    			// 	sails.log.debug(response);
-	    			// 	res.json({Resp:response, Data: data});
-	    			// });
-
-	    			//Make request to Java API
-	    			sails.log.debug('Payment done successfully');
-	    			res.json({msg:'payment done successfully'});
-    			}else{
-    				res.status(401).json({msg:'Unauthorized merchant key', status: false, error:'merchant'});
-    			}
+    			//Call Java API
+    			client.post("http://52.11.231.112:8080/admin/merchant/charge",args,function(data, response){
+    				res.json({paymentResponse:response});
+    			});
     		}
     	});
     },
