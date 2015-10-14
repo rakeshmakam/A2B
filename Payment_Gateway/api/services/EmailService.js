@@ -12,11 +12,11 @@ var options = {
 var transporter = nodemailer.createTransport(options);
 transporter.use('compile', hbs({viewEngine: 'ejs', viewPath: 'views', extName: '.ejs'}));
 
-exports.send = function(data, cb) {
-	sails.log.debug(data);
+exports.send = function(emailId, data, cb) {
+	sails.log.debug(data, emailId);
 	var mail = {
 		from: 'A2B <noreply@a2b.com>',
-		to: data.email,
+		to: emailId,
 		subject: 'A2B invitation',
 		template: 'invitation',
 		context: data

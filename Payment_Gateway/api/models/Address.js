@@ -8,54 +8,51 @@
 module.exports = {
 
 	attributes: {
-		UserId:{
-			type:'int'
+		addressLine1: {
+			type: "string",
+			required : true,
+			size: 200
 		},
-		Address:{
-			type:'string'
+
+		addressLine2: {
+			type: "string",
+			size: 200
+		},
+
+		addressLine3: {
+			type: "string",
+			size: 200
+		},
+
+		city: {
+			type: "string",
+			required : true,
+			size: 100
+		},
+
+		pinCode: {
+			type: "integer",
+			required : true,
+			size: 6
+		},
+
+		user: {
+			model: 'User',
+			via: 'billingAddressId'
 		}
 	},
 
-	addOrUpdate:function(userId, addresses, callback){
-		Address.find({UserId: userId}).exec(function(err, user){
-			if(user.length>0){
-				Address.destroy({UserId: userId}).exec(function(err){
-					if(err){
-						callback(err, null);
-					}else{
-						var counter = 0;
-						_.each(function(addresses, address){
-							Address.create({UserId:userId, Address: address}).exec(function(err, addr){
-								if(err){
-									callback(err, null);
-								}else{
-									if(counter == addresses.length-1){
-										callback(null, addresses);
-									}else{
-										counter = counter + 1;
-									}
-								}
-							});
-						});
-					}
-				});
-			}else{
-				var counter = 0;
-				_.each(function(addresses, address){
-					Address.create({UserId:userId, Address: address}).exec(function(err, addr){
-						if(err){
-							callback(err, null);
-						}else{
-							if(counter == addresses.length-1){
-								callback(null, addresses);
-							}else{
-								counter = counter + 1;
-							}
-						}
-					});
-				});
+	add: function (data, callback) {
+		Address.create(data, function (err, address) {
+			if (err) {
+				callback(err);
+			} else {
+				callback(null, address);
 			}
 		});
 	}
+
+
+	
 };
 
