@@ -9,7 +9,6 @@ var Client = require('node-rest-client').Client;
 var baseUrl = "http://localhost:8080";
 var NODEUSERNAME = 'admin';
 var NODEPASSWORD = 'admin';
-console.log(process.env);
 module.exports = {
 	// Add user
 	add: function (req, res) {
@@ -227,12 +226,12 @@ module.exports = {
     		}else if(merchantDetails == false){
     			res.status(401).json({msg : 'Merchant not registered'});
     		}else{
-    			var encodedStr = new Buffer(NODEUSERNAME+":"+NODEPASSWORD).toString('base64');
+    			var encodedStr = new Buffer(process.env.NODEUSERNAME+":"+process.env.NODEPASSWORD).toString('base64');
     			var client = new Client();
 
     			var args = {
     				data: {
-			    		userId: req.user.id,
+			    		userId: '5618f029d4c6ef6543d6d42a',
 			    		merchantId: req.body.merchantId,
 			    		amount: req.body.amount,
 			    		currency : req.body.currency
@@ -277,7 +276,7 @@ module.exports = {
     		}else if(merchantDetails == 'unregistered'){
     			res.status(401).json({msg : 'Merchant not registered'});
     		}else if(merchantDetails.status == true){
-    			var encodedStr = new Buffer(process.env.USERNAME+":"+process.env.PASSWORD).toString('base64');
+    			var encodedStr = new Buffer(process.env.NODEUSERNAME+":"+process.env.NODEPASSWORD).toString('base64');
     			var client = new Client();
 
     			var args = {

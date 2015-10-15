@@ -52,8 +52,6 @@ process.chdir(__dirname);
       rc = function () { return {}; };
     }
   }
-  process.env.USERNAME = "admin";
-  process.env.PASSWORD = "admin";
 
   // Start server
   sails.lift(rc('sails'));
