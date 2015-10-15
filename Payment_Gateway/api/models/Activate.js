@@ -34,13 +34,19 @@ module.exports = {
 		console.log(emailVerificationToken);
 		Activate.findOne({where:{emailVerificationToken: emailVerificationToken}}).exec(function (err, activate) {
 			sails.log.debug(activate);
-			sails.log.debug(err);
 			if(err) {
 	  			callback(err);
 	  		} else if (activate) {
 				User.update({id : activate.user}, {emailVerified: true}, function (error, userData) {
 					if(!error) {
-						callback(null, userData);
+						Activate.destroy({where:{emailVerificationToken: emailVerificationToken}}).exec(function (e, data) {
+							if (!error) {
+								callback(null, userData);
+							} else{
+								callback(e)
+							}
+						})
+						
 					} else {
 						callback(error);
 					}

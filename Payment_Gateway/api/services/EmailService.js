@@ -4,13 +4,13 @@ var hbs = require('nodemailer-express-handlebars');
 var options = {
     service: 'Gmail',
     auth: {
-        user: process.env.user_id,
-        pass: process.env.password
+        user: "wellqapp@gmail.com",
+        pass: "wellq@123"
     }
 }
 
-// var transporter = nodemailer.createTransport(options);
-// transporter.use('compile', hbs({viewEngine: 'ejs', viewPath: 'views', extName: '.ejs'}));
+var transporter = nodemailer.createTransport(options);
+transporter.use('compile', hbs({viewEngine: 'ejs', viewPath: 'views', extName: '.ejs'}));
 
 exports.send = function(emailId, data, cb) {
 	sails.log.debug(data, emailId);
