@@ -227,18 +227,18 @@ module.exports = {
     		}else if(merchantDetails == false){
     			res.status(401).json({msg : 'Merchant not registered'});
     		}else{
-    			var encodedStr = new Buffer(NODEUSERNAME+":"+NODEPASSWORD).toString('base64');
+    			var encodedStr = new Buffer(process.env.NODEUSERNAME+":"+process.env.NODEPASSWORD).toString('base64');
     			var client = new Client();
 
     			var args = {
     				data: {
-			    		userId: req.user.id,
+			    		userId: '5618f029d4c6ef6543d6d42a',
 			    		merchantId: req.body.merchantId,
 			    		amount: req.body.amount,
 			    		currency : req.body.currency
 			    	},
 			    	headers:{
-			    		"Authorization": "Basic YWRtaW46YWRtaW4=",
+			    		"Authorization": "Basic "+encodedStr,
 			    		"Content-Type": "application/json"
 			    	}
     			};
@@ -277,7 +277,7 @@ module.exports = {
     		}else if(merchantDetails == 'unregistered'){
     			res.status(401).json({msg : 'Merchant not registered'});
     		}else if(merchantDetails.status == true){
-    			var encodedStr = new Buffer(process.env.USERNAME+":"+process.env.PASSWORD).toString('base64');
+    			var encodedStr = new Buffer(process.env.NODEUSERNAME+":"+process.env.NODEPASSWORD).toString('base64');
     			var client = new Client();
 
     			var args = {
