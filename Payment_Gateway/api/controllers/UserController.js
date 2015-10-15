@@ -7,8 +7,8 @@
 var jwt = require('jsonwebtoken');
 var Client = require('node-rest-client').Client;
 var baseUrl = "http://localhost:8080";
-var request = require('request');
-console.log(process.env);
+var NODEUSERNAME = 'admin';
+var NODEPASSWORD = 'admin';
 module.exports = {
 	// Add user
 	add: function (req, res) {
@@ -26,9 +26,8 @@ module.exports = {
 							if (e) {
 								res.negotiate(e);
 							} else {
-								// res.json({message: "Thank you for signing up with us"});
 								var client = new Client();
-				    			var encodedStr = new Buffer("admin:admin").toString('base64');
+				    			var encodedStr = new Buffer(NODEUSERNAME+":"+NODEPASSWORD).toString('base64');
  
 								var args = {
 				    				data: {
@@ -40,15 +39,11 @@ module.exports = {
 							    		"Content-Type": "application/json"
 							    	} 
 				    			};
-				    			sails.log.debug("args", args);
-								request.post(baseUrl+"/admin/user", args, function(error, response, body){
-									sails.log.debug("data", body);
-									sails.log.debug("response", response);
-									sails.log.debug("error", error);
-				    				if (!error) {
-				    					res.json({message: "Your account is activated successfully, please try to login"});
+								client.post(baseUrl+"/admin/user", args, function(data, resp){
+				    				if (data.error) {
+				    					res.json({error: data.error, message: data.message});
 				    				} else {
-				    					res.negotiate(error);
+				    					res.json({message: "Your account is activated successfully, please try to login"});
 				    				}
 				    			});
 								// EmailService.send(user.emailId, {'emailVerificationToken' : result.emailVerificationToken}, function(error, data){
@@ -71,7 +66,7 @@ module.exports = {
 			if (!err) {
 
 				var client = new Client();
-    			var encodedStr = new Buffer(process.env.USERNAME+":"+process.env.PASSWORD).toString('base64');
+    			var encodedStr = new Buffer(NODEUSERNAME+":"+NODEPASSWORD).toString('base64');
 
 				var args = {
     				data: {
@@ -231,7 +226,7 @@ module.exports = {
     		}else if(merchantDetails == false){
     			res.status(401).json({msg : 'Merchant not registered'});
     		}else{
-    			var encodedStr = new Buffer(process.env.USERNAME+":"+process.env.PASSWORD).toString('base64');
+    			var encodedStr = new Buffer(NODEUSERNAME+":"+NODEPASSWORD).toString('base64');
     			var client = new Client();
 
     			var args = {
@@ -287,8 +282,7 @@ module.exports = {
     			var args = {
     				data: {
 			    		merchantId: req.body.merchant_id,
-	    				// userId: req.user.id,
-	    				userId: '5618f029d4c6ef6543d6d42a',
+	    				userId: req.user.id,
 	    				currency: req.body.currency,
 	    				amount: req.body.amount,
 	    				description: req.body.description,
