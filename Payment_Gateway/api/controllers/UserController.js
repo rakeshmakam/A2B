@@ -8,7 +8,7 @@ var jwt = require('jsonwebtoken');
 var Client = require('node-rest-client').Client;
 var baseUrl = "http://localhost:8080";
 var request = require('request');
-
+console.log(process.env);
 module.exports = {
 	// Add user
 	add: function (req, res) {
@@ -231,7 +231,7 @@ module.exports = {
     		}else if(merchantDetails == false){
     			res.status(401).json({msg : 'Merchant not registered'});
     		}else{
-    			var encodedStr = new Buffer(process.env.NODEUSERNAME+":"+process.env.NODEPASSWORD).toString('base64');
+    			var encodedStr = new Buffer(process.env.USERNAME+":"+process.env.PASSWORD).toString('base64');
     			var client = new Client();
 
     			var args = {
@@ -242,7 +242,7 @@ module.exports = {
 			    		currency : req.body.currency
 			    	},
 			    	headers:{
-			    		"Authorization": "Basic YWRtaW46YWRtaW4=",
+			    		"Authorization": "Basic "+encodedStr,
 			    		"Content-Type": "application/json"
 			    	}
     			};
