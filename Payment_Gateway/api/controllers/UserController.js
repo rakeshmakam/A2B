@@ -264,6 +264,9 @@ module.exports = {
     	var usn = decoded.substr(0,decoded.indexOf(':'));
     	var pwd = decoded.substr(decoded.indexOf(':')+1,decoded.length-1);
 
+    	console.log(usn);
+    	console.log(pwd);
+
     	var merchantCredentials = {
     		merchantId : usn,
     		merchantKey : pwd
