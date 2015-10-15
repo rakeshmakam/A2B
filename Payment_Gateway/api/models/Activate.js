@@ -31,15 +31,38 @@ module.exports = {
 	},
 
 	signup: function (emailVerificationToken, callback) {
-		console.log(emailVerificationToken);
 		Activate.findOne({where:{emailVerificationToken: emailVerificationToken}}).exec(function (err, activate) {
-			sails.log.debug(activate);
 			if(err) {
 	  			callback(err);
 	  		} else if (activate) {
 				User.update({id : activate.user}, {emailVerified: true}, function (error, userData) {
 					if(!error) {
 						Activate.destroy({where:{emailVerificationToken: emailVerificationToken}}).exec(function (e, data) {
+							if (!error) {
+								callback(null, userData);
+							} else{
+								callback(e)
+							}
+						})
+						
+					} else {
+						callback(error);
+					}
+				});
+			} else {
+				callback({status: 404, message: "We could not find your account."});
+			}
+		});
+	},
+
+	resetPassword: function (data, callback) {
+		Activate.findOne({where:{emailVerificationToken: data.emailVerificationToken}}).exec(function (err, activate) {
+			if(err) {
+	  			callback(err);
+	  		} else if (activate) {
+				User.edit(activate.user, {password: data.password}, function (error, userData) {
+					if(!error) {
+						Activate.destroy({where:{emailVerificationToken: data.emailVerificationToken}}).exec(function (e, data) {
 							if (!error) {
 								callback(null, userData);
 							} else{

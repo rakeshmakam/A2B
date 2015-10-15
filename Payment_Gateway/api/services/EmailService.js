@@ -31,10 +31,10 @@ exports.send = function(emailId, data, cb) {
 	});
 };
 
-exports.resetPassword = function(data, cb) {
+exports.resetPassword = function(emailId, data, cb) {
 	var mail = {
 		from: 'A2B <noreply@a2b.com>',
-		to: data.email,
+		to: emailId,
 		subject: 'A2B invitation to Reset Password',
 		template: 'resetpassword',
 		context: data
