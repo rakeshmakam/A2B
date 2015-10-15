@@ -248,6 +248,7 @@ module.exports = {
     				if(data.error){
     					res.json({error: data.error, message: data.message});
     				}else if(data.token){
+    					sails.log.debug('user authorization successfull');
     					res.json({userToken: data.token});
     				}
     			});
@@ -283,7 +284,7 @@ module.exports = {
     			var args = {
     				data: {
 			    		merchantId: req.body.merchant_id,
-	    				userId: req.user.id,
+	    				userId: '5618f029d4c6ef6543d6d42a',
 	    				currency: req.body.currency,
 	    				amount: req.body.amount,
 	    				description: req.body.description,
@@ -305,8 +306,13 @@ module.exports = {
 
     			//Call Java API
     			client.post(baseUrl+"/merchant/charge",args,function(data, response){
-    				sails.log.debug('')
-    				res.json({paymentResponse:response});
+    				if(data.error){
+    					sails.log.debug('error in user payment');
+    					res.json({error:data.error, message: data.message});
+    				}else{
+    					sails.log.debug('')
+    					res.json({paymentResponse:response});
+    				}
     			});
     		}
     	});
