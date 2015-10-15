@@ -283,7 +283,7 @@ module.exports = {
 
     			var args = {
     				data: {
-			    		merchantId: req.body.merchant_id,
+			    		merchantId: usn,
 	    				userId: '5618f029d4c6ef6543d6d42a',
 	    				currency: req.body.currency,
 	    				amount: req.body.amount,
@@ -310,7 +310,7 @@ module.exports = {
     					sails.log.debug('error in user payment');
     					res.json({error:data.error, message: data.message});
     				}else{
-    					sails.log.debug('')
+    					sails.log.debug('successfull payment');
     					res.json({paymentResponse:response});
     				}
     			});
