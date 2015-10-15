@@ -303,7 +303,8 @@ module.exports = {
     			};
 
     			//Call Java API
-    			client.post(baseUrl+"/admin/merchant/charge",args,function(data, response){
+    			client.post(baseUrl+"/merchant/charge",args,function(data, response){
+    				sails.log.debug('')
     				res.json({paymentResponse:response});
     			});
     		}
