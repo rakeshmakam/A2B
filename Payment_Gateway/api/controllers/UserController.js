@@ -26,33 +26,35 @@ module.exports = {
 							if (e) {
 								res.negotiate(e);
 							} else {
-								var client = new Client();
-				    			var encodedStr = new Buffer(NODEUSERNAME+":"+NODEPASSWORD).toString('base64');
+								// var client = new Client();
+				    // 			var encodedStr = new Buffer(NODEUSERNAME+":"+NODEPASSWORD).toString('base64');
  
-								var args = {
-				    				data: {
-							    		userId: user.id,
-										currency: user.currency
-							    	},
-							    	headers:{
-							    		"authorization": "Basic "+encodedStr,
-							    		"Content-Type": "application/json"
-							    	} 
-				    			};
-								client.post(baseUrl+"/admin/user", args, function(data, resp){
-				    				if (data.error) {
-				    					res.json({error: data.error, message: data.message});
-				    				} else {
-				    					res.json({message: "Your account is activated successfully, please try to login"});
-				    				}
-				    			});
-								// EmailService.send(user.emailId, {'emailVerificationToken' : result.emailVerificationToken}, function(error, data){
-								// 	if (!error) {
-								// 		sails.log.debug(data);
-								// 	} else {
-								// 		sails.log.error(error);
-								// 	}
-								// });
+								// var args = {
+				    // 				data: {
+							 //    		userId: user.id,
+								// 		currency: user.currency
+							 //    	},
+							 //    	headers:{
+							 //    		"authorization": "Basic "+encodedStr,
+							 //    		"Content-Type": "application/json"
+							 //    	} 
+				    // 			};
+								// client.post(baseUrl+"/admin/user", args, function(data, resp){
+				    // 				if (data.error) {
+				    // 					res.json({error: data.error, message: data.message});
+				    // 				} else {
+				    // 					res.json({message: "Your account is activated successfully, please try to login"});
+				    // 				}
+				    // 			});
+				    			res.json({message: "Your account is activated successfully, please try to login"});
+
+								EmailService.send(user.emailId, {'emailVerificationToken' : result.emailVerificationToken}, function(error, data){
+									if (!error) {
+										sails.log.debug(data);
+									} else {
+										sails.log.error(error);
+									}
+								});
 							}
 						});
 					}
@@ -64,28 +66,27 @@ module.exports = {
 	signupActivate: function (req, res) {
 		Activate.signup(req.param('random'), function (err, user) {
 			if (!err) {
-
 				var client = new Client();
-    			var encodedStr = new Buffer(NODEUSERNAME+":"+NODEPASSWORD).toString('base64');
+				var encodedStr = new Buffer(NODEUSERNAME+":"+NODEPASSWORD).toString('base64');
 
 				var args = {
-    				data: {
-			    		userId: user[0].id,
+					data: {
+						userId: user[0].id,
 						currency: user[0].currency
-			    	},
-			    	headers:{
-			    		"authorization": "Basic "+encodedStr,
-			    		"Content-Type": "application/json"
-			    	} 
-    			};
+					},
+					headers:{
+						"authorization": "Basic "+encodedStr,
+						"Content-Type": "application/json"
+					} 
+				};
 
-				client.post(baseUrl+"/admin/user", args, function(error, data){
-    				if (!error) {
-    					res.json({message: "Your account is activated successfully, please try to login"});
-    				} else {
-    					res.negotiate(error);
-    				}
-    			});
+				client.post(baseUrl+"/admin/user", args, function(data, resp){
+					if (data.error) {
+						res.json({error: data.error, message: data.message});
+					} else {
+						res.json({message: "Your account is activated successfully, please try to login"});
+					}
+				});
 			} else { 
 				res.negotiate(err);
 			}
