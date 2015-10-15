@@ -198,7 +198,7 @@ module.exports = {
     },
 
     checkMerchantAuthorization: function(merchantCreds, callback){
-		User.findOne({id: merchantCreds.merchantId, password: merchantCreds.merchantKey}).exec(function(err, merchantRecord){
+		User.findOne({email: merchantCreds.merchantEmail, password: merchantCreds.merchantPassword}).exec(function(err, merchantRecord){
 			if(err){
 				callback(err, null);
 			}else if(merchantRecord){

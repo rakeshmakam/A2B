@@ -283,7 +283,7 @@ module.exports = {
 
     			var args = {
     				data: {
-			    		merchantId: usn,
+			    		merchantId: req.body.merchantId,
 	    				userId: '5618f029d4c6ef6543d6d42a',
 	    				currency: req.body.currency,
 	    				amount: req.body.amount,
