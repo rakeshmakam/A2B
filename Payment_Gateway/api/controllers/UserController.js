@@ -268,8 +268,8 @@ module.exports = {
     	console.log(pwd);
 
     	var merchantCredentials = {
-    		merchantId : usn,
-    		merchantKey : pwd
+    		merchantEmail : usn,
+    		merchantPassword : pwd
     	};
     	
     	//Check if merchant is legitimate
