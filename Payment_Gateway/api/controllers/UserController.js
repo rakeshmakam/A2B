@@ -9,6 +9,7 @@ var Client = require('node-rest-client').Client;
 var baseUrl = "http://localhost:8080";
 var NODEUSERNAME = 'admin';
 var NODEPASSWORD = 'admin';
+console.log(process.env);
 module.exports = {
 	// Add user
 	add: function (req, res) {
