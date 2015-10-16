@@ -230,6 +230,7 @@ module.exports = {
     			var encodedStr = new Buffer(process.env.NODEUSERNAME+":"+process.env.NODEPASSWORD).toString('base64');
     			var client = new Client();
 
+    			console.log(req.user.id);
     			var args = {
     				data: {
 			    		userId: req.user.id,
