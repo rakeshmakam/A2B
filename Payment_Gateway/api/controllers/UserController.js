@@ -236,9 +236,10 @@ module.exports = {
     			var encodedStr = new Buffer(process.env.NODEUSERNAME+":"+process.env.NODEPASSWORD).toString('base64');
     			var client = new Client();
 
+    			console.log(req.user.id);
     			var args = {
     				data: {
-			    		userId: '5618f029d4c6ef6543d6d42a',
+			    		userId: req.user.id,
 			    		merchantId: req.body.merchantId,
 			    		amount: req.body.amount,
 			    		currency : req.body.currency
@@ -254,6 +255,7 @@ module.exports = {
     				if(data.error){
     					res.json({error: data.error, message: data.message});
     				}else if(data.token){
+    					sails.log.debug('user authorization successfull');
     					res.json({userToken: data.token});
     				}
     			});
@@ -270,8 +272,8 @@ module.exports = {
     	var pwd = decoded.substr(decoded.indexOf(':')+1,decoded.length-1);
 
     	var merchantCredentials = {
-    		merchantId : usn,
-    		merchantKey : pwd
+    		merchantEmail : usn,
+    		merchantPassword : pwd
     	};
     	
     	//Check if merchant is legitimate
@@ -288,20 +290,14 @@ module.exports = {
 
     			var args = {
     				data: {
-			    		merchantId: req.body.merchant_id,
-	    				userId: req.user.id,
-	    				currency: req.body.currency,
+	    				userId: req.body.userId,
+	    				token: req.body.user_token,
+	    				merchantId: req.body.merchantId,
 	    				amount: req.body.amount,
+	    				currency: req.body.currency,
 	    				description: req.body.description,
-	    				metaData: req.body.metadata,
-	    				reciptEmail: req.body.recipt_email,
-	    				reciptNumber: req.body.recipt_number,
-	    				shippingInfo: req.body.shipping_info,
 	    				statementDescriptor: req.body.statement_descriptor,
-	    				status: req.body.status,
-	    				// transactionId: transaction_id,
-	    				merchantTransactionId : req.body.merchant_transaction_id,
-	    				userAuthToken: req.body.user_token
+	    				chargeDate : new Date()
 			    	},
 			    	headers:{
 			    		"authorization": "Basic "+encodedStr,
@@ -309,13 +305,18 @@ module.exports = {
 			    	} 
     			};
 
-    			//Call Java API
-    			client.post(baseUrl+"/admin/merchant/charge",args,function(data, response){
-    				res.json({paymentResponse:response});
+    			client.post(baseUrl+"/admin/charge",args,function(data, response){
+    				if(data.error){
+    					sails.log.debug('error in user payment');
+    					res.json({error:data.error, message: data.message});
+    				}else{
+    					sails.log.debug('successfull payment');
+    					res.json({paymentResponse:response});
+    				}
     			});
     		}
     	});
-    },
+    }
 
     // check:function(req, res){
     // 	res.json({env: process.env});
