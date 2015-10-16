@@ -17,7 +17,7 @@ exports.send = function(emailId, data, cb) {
 	var mail = {
 		from: 'A2B <noreply@a2b.com>',
 		to: emailId,
-		subject: 'A2B invitation',
+		subject: 'A2B Account Confirmation',
 		template: 'invitation',
 		context: data
 	}
