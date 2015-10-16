@@ -301,8 +301,8 @@ module.exports = {
     			client.post(baseUrl+"/admin/charge",args,function(data, response){
     				if(data.error){
     					sails.log.debug('error in user payment');
-    					sails.log.debug(data);
     					res.json({error:data.error, message: data.message});
+    					sails.log.debug(data);
     				}else{
     					sails.log.debug('successfull payment');
     					res.json({paymentResponse:response});
