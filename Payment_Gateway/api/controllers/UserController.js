@@ -168,13 +168,19 @@ module.exports = {
     	if (req.body.email) {
 			User.resetPasswordInitiate(req.body.email, function (err, user) {
 				if (!err) {
-					res.json(user);
+					Activate.add({user: user.id}, function (e, result) {
+						if (e) {
+							res.negotiate(e);
+						} else { 
+							res.json({message: "Please check your mail"});
 
-					EmailService.resetPassword(user, function (error, data) {
-						if (!error) {
-							sails.log.debug(data);
-						} else {
-							sails.log.error(error);
+							EmailService.resetPassword(user.emailId, result, function (error, data) {
+								if (!error) {
+									sails.log.debug(data);
+								} else {
+									sails.log.error(error);
+								}
+							});
 						}
 					});
 				} else {
@@ -188,8 +194,8 @@ module.exports = {
 
     //reset the password
     resetPassword: function(req, res){
-    	if(req.body.hashKey && req.body.password){
-    		User.resetPassword(req.body, function (err, user) {
+    	if(req.body.emailVerificationToken && req.body.password){
+    		Activate.resetPassword(req.body, function (err, user) {
     			if (!err) {
     				res.json("Password has been reset successfully.");
     			} else {
