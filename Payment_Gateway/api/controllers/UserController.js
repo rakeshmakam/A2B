@@ -230,7 +230,6 @@ module.exports = {
     			var encodedStr = new Buffer(process.env.NODEUSERNAME+":"+process.env.NODEPASSWORD).toString('base64');
     			var client = new Client();
 
-    			console.log(req.user.id);
     			var args = {
     				data: {
 			    		userId: req.user.id,
@@ -302,6 +301,7 @@ module.exports = {
     			client.post(baseUrl+"/admin/charge",args,function(data, response){
     				if(data.error){
     					sails.log.debug('error in user payment');
+    					sails.log.debug(data);
     					res.json({error:data.error, message: data.message});
     				}else{
     					sails.log.debug('successfull payment');
