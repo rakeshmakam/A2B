@@ -226,96 +226,97 @@ module.exports = {
 
     userAuthorization: function(req, res){
     	sails.log.debug('user authorization initiated');
-    	var userId = req.user.id;
-    	Merchant.validateMerchant(req.body.merchantId, function(err, merchantDetails){
-    		if(err){
-    			res.serverError(err);
-    		}else if(merchantDetails == false){
-    			res.status(401).json({msg : 'Merchant not registered'});
-    		}else{
-    			var encodedStr = new Buffer(process.env.NODEUSERNAME+":"+process.env.NODEPASSWORD).toString('base64');
-    			var client = new Client();
+    	// var userId = req.user.id;
+    	// Merchant.validateMerchant(req.body.merchantId, function(err, merchantDetails){
+    	// 	if(err){
+    	// 		res.serverError(err);
+    	// 	}else if(merchantDetails == false){
+    	// 		res.status(401).json({msg : 'Merchant not registered'});
+    	// 	}else{
+    	// 		// var encodedStr = new Buffer(process.env.NODEUSERNAME+":"+process.env.NODEPASSWORD).toString('base64');
+    	// 	}
+    	// });
 
-    			var args = {
-    				data: {
-			    		userId: req.user.id,
-			    		merchantId: req.body.merchantId,
-			    		amount: req.body.amount,
-			    		currency : req.body.currency
-			    	},
-			    	headers:{
-			    		"Authorization": "Basic "+encodedStr,
-			    		"Content-Type": "application/json"
-			    	}
-    			};
+    	var client = new Client();
 
-    			client.post(baseUrl+"/admin/user/authToken",args,function(data, response){
-    				// sails.log.debug(data);
-    				if(data.error){
-    					res.json({error: data.error, message: data.message});
-    				}else if(data.token){
-    					sails.log.debug('user authorization successfull');
-    					res.json({userToken: data.token});
-    				}
-    			});
-    		}
-    	});
+		var args = {
+			data: {
+	    		// userId: req.user.id,
+	    		merchantId: req.body.merchantId,
+	    		amount: req.body.amount,
+	    		currency : req.body.currency
+	    	},
+	    	headers:{
+	    		"A2B-AUTH-TOKEN": req.header,
+	    		"Content-Type": "application/json"
+	    	}
+		};
+
+		client.post(baseUrl+"/admin/user/authToken",args,function(data, response){
+			// sails.log.debug(data);
+			if(data.error){
+				res.json({error: data.error, message: data.message});
+			}else if(data.token){
+				sails.log.debug('user authorization successfull');
+				res.json({userToken: data.token});
+			}
+		});
     },
 
     userPayment: function(req, res){
     	sails.log.debug('user payment initiated');
-    	var encodedAuth = req.headers.authorization.substr(6,req.headers.authorization.length-1);
-    	var decoded = new Buffer(encodedAuth,"base64").toString();
+    	// var encodedAuth = req.headers.authorization.substr(6,req.headers.authorization.length-1);
+    	// var decoded = new Buffer(encodedAuth,"base64").toString();
     	
-    	var usn = decoded.substr(0,decoded.indexOf(':'));
-    	var pwd = decoded.substr(decoded.indexOf(':')+1,decoded.length-1);
+    	// var usn = decoded.substr(0,decoded.indexOf(':'));
+    	// var pwd = decoded.substr(decoded.indexOf(':')+1,decoded.length-1);
 
-    	var merchantCredentials = {
-    		merchantEmail : usn,
-    		merchantPassword : pwd
-    	};
+    	// var merchantCredentials = {
+    	// 	merchantEmail : usn,
+    	// 	merchantPassword : pwd
+    	// };
     	
+    	// var encodedStr = new Buffer(process.env.NODEUSERNAME+":"+process.env.NODEPASSWORD).toString('base64');
+		var client = new Client();
+
+		var args = {
+			data: {
+				userId: req.body.userId,
+				token: req.body.user_token,
+				merchantId: req.body.merchantId,
+				amount: req.body.amount,
+				currency: req.body.currency,
+				description: req.body.description,
+				statementDescriptor: req.body.statement_descriptor,
+	    	},
+	    	headers:{
+	    		// "authorization": "Basic "+encodedStr,
+	    		"Authorization" : req.headers.authorization,
+	    		"Content-Type": "application/json"
+	    	}
+		};
+
+		client.post(baseUrl+"/admin/charge",args,function(data, response){
+			if(data.error){
+				sails.log.debug('error in user payment');
+				res.json({error:data.error, message: data.message});
+			}else{
+				sails.log.debug('successfull payment');
+				res.json({paymentResponse:response});
+			}
+		});
+
     	//Check if merchant is legitimate
-    	User.checkMerchantAuthorization(merchantCredentials, function(err, merchantDetails){
-    		if(err){
-    			res.serverError(err);
-    		}else if(merchantDetails == 'unknown'){
-    			res.status(403).json({msg : 'Unknown merchant credentials'});
-    		}else if(merchantDetails == 'unregistered'){
-    			res.status(401).json({msg : 'Merchant not registered'});
-    		}else if(merchantDetails.status == true){
-    			var encodedStr = new Buffer(process.env.NODEUSERNAME+":"+process.env.NODEPASSWORD).toString('base64');
-    			var client = new Client();
-
-    			var args = {
-    				data: {
-	    				userId: req.body.userId,
-	    				token: req.body.user_token,
-	    				merchantId: req.body.merchantId,
-	    				amount: req.body.amount,
-	    				currency: req.body.currency,
-	    				description: req.body.description,
-	    				statementDescriptor: req.body.statement_descriptor,
-	    				chargeDate : new Date()
-			    	},
-			    	headers:{
-			    		"authorization": "Basic "+encodedStr,
-			    		"Content-Type": "application/json"
-			    	} 
-    			};
-
-    			client.post(baseUrl+"/admin/charge",args,function(data, response){
-    				if(data.error){
-    					sails.log.debug('error in user payment');
-    					res.json({error:data.error, message: data.message});
-    					sails.log.debug(data);
-    				}else{
-    					sails.log.debug('successfull payment');
-    					res.json({paymentResponse:response});
-    				}
-    			});
-    		}
-    	});
+    	// User.checkMerchantAuthorization(merchantCredentials, function(err, merchantDetails){
+    	// 	if(err){
+    	// 		res.serverError(err);
+    	// 	}else if(merchantDetails == 'unknown'){
+    	// 		res.status(403).json({msg : 'Unknown merchant credentials'});
+    	// 	}else if(merchantDetails == 'unregistered'){
+    	// 		res.status(401).json({msg : 'Merchant not registered'});
+    	// 	}else if(merchantDetails.status == true){
+    	// 	}
+    	// });
     }
 
     // check:function(req, res){
