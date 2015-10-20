@@ -40,6 +40,7 @@ module.exports.routes = {
   'POST /user/signup'                   : 'UserController.add',
   'POST /user/login'                    : 'UserController.login',
   'GET /user/logout'                    : 'UserController.logout',
+  'GET /user'                           : 'UserController.profile',
 
   // 'POST /user/signup'                   : 'UserController.add',
   // 'GET /user'                           : 'UserController.profile',

@@ -64,6 +64,7 @@ module.exports = {
 					data.sailsToken = sailsToken;
 					data.javaToken = data.token;
 					delete data.token;
+					console.log(data);
 					req.user = data;
 					res.json({token: data.sailsToken});
 				}
@@ -71,18 +72,24 @@ module.exports = {
 		}
 	},
 
-	// // Get user profile
-	// profile: function (req, res) {
-	// 	var userId = req.user.id;
-		
-	// 	User.profile(userId, function (err, user) {
-	// 		if (!err) {
-	// 			res.json(user);
-	// 		} else { 
-	// 			res.negotiate(err);
-	// 		}
-	// 	});
-	// },
+	// Get user profile
+	profile: function (req, res) {
+		var client = new Client();
+		var args = {
+			headers:{
+				"Content-Type": "application/json",
+				"A2B-AUTH-TOKEN": req.user.token
+			} 
+		};
+
+		client.get(baseUrl+"/user", args, function(data, resp){
+			if (data.error) {
+				res.negotiate({error: data.error, message: data.message});
+			} else {
+				res.json(data);
+			}
+		});
+	},
 
 	// // Edit user profile
 	// edit: function (req, res) {
