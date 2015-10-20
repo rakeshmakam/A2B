@@ -31,7 +31,7 @@ module.exports = {
 			} 
 		};
 
-		client.post(baseUrl+"/user/login", args, function(data, resp){
+		client.post(baseUrl+"/user/register", args, function(data, resp){
 			if (data.error) {
 				res.negotiate({error: data.error, message: data.message});
 			} else {
