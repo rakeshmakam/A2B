@@ -35,21 +35,26 @@ module.exports.routes = {
   '/': {
     view: 'homepage'
   },
+  'GET /show_hide_atob_button'          : 'AppController.showHideAtoBButton',
 
   'POST /user/signup'                   : 'UserController.add',
-  'GET /user'                           : 'UserController.profile',
-  'PUT /user'                           : 'UserController.edit',
   'POST /user/login'                    : 'UserController.login',
   'GET /user/logout'                    : 'UserController.logout',
-  'DELETE /user/:id'                    : 'UserController.delete',  
-  'GET /user/activate/:random'          : 'UserController.signupActivate',
-  'POST /user/reset_password_initiate'  : 'UserController.resetPasswordInitiate',
-  'PUT /user/reset_password'            : 'UserController.resetPassword',
+
+  // 'POST /user/signup'                   : 'UserController.add',
+  // 'GET /user'                           : 'UserController.profile',
+  // 'PUT /user'                           : 'UserController.edit',
+  // 'POST /user/login'                    : 'UserController.login',
+  // 'GET /user/logout'                    : 'UserController.logout',
+  // 'DELETE /user/:id'                    : 'UserController.delete',  
+  // 'GET /user/activate/:random'          : 'UserController.signupActivate',
+  // 'POST /user/reset_password_initiate'  : 'UserController.resetPasswordInitiate',
+  // 'PUT /user/reset_password'            : 'UserController.resetPassword',
 
 
   // '/user/getUserProfile'        :           'UserController.getUserProfile',
   // '/user/getUserBills'          :           'UserController.getUserBills',
-  'POST /user/address'          :           'UserController.addOrUpdateAddress',
+  // 'POST /user/address'          :           'UserController.addOrUpdateAddress',
   // 'DELETE /user/address'        :           'UserController.deleteAddress'
   // '/user/getUserPurchases'      :           'UserController.getUserPurchases',
   'POST /user/authorizeUser'    :           'UserController.userAuthorization',

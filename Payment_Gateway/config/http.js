@@ -90,6 +90,7 @@ module.exports = {
     customMiddleware: function(app){
       app.use(expressJwt({secret: 'secret'}).unless({path: [
           '/',
+          '/show_hide_atob_button',
           '/user/signup',
           '/user/login',
           // '/check',
