@@ -33,7 +33,7 @@ module.exports = {
 
 		client.post(baseUrl+"/user/login", args, function(data, resp){
 			if (data.error) {
-				res.json({error: data.error, message: data.message});
+				res.negotiate({error: data.error, message: data.message});
 			} else {
 				res.json(data);
 			}
@@ -58,7 +58,7 @@ module.exports = {
 
 			client.post(baseUrl+"/user/login", args, function(data, resp){
 				if (data.error) {
-					res.json({error: data.error, message: data.message});
+					res.negotiate({error: data.error, message: data.message});
 				} else {
 					var sailsToken = jwt.sign(data, 'secret', {expiresIn: 1296000}); //15 days
 					data.sailsToken = sailsToken;
