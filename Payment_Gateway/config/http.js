@@ -95,7 +95,7 @@ module.exports = {
           '/user/login',
           // '/check',
           // '/merchant',
-          '/user/makePayment',
+          '/user/payment',
           '/user/reset_password_initiate',
           '/user/reset_password',
           /^\/user\/activate\/.*/
