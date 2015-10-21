@@ -66,27 +66,6 @@ module.exports = {
 					delete data.token;
 					console.log(data);
 					req.user = data;
-
-					if(req.body.vendorUserId && req.body.merchantId){
-						var args = {
-							data: {
-								merchantId: req.body.merchantId,
-								vendorUserId: req.body.vendorUserId
-							},
-							headers: {
-								"A2B-AUTH-TOKEN": req.user.token,
-								"Content-Type": "application/json"
-							}
-						};
-
-						client.post(baseUrl+"/user/merchant", args, function(data, response){
-							if(data.error){
-								res.json({error: data.error, message: data.message});
-								sails.log.debug(data);
-							}
-						});
-					}
-					
 					res.json({token: data.sailsToken});
 				}
 			});
@@ -212,6 +191,46 @@ module.exports = {
     // 		});
     // 	}
     // },
+
+    checkUserMerchantAssociation: function(req, res){
+    	if(!req.body && !req.body.vendorUserId && !req.body.merchantId){
+			res.badRequest('Please provide all details');
+		}else{
+			var args = {
+				data: {
+					merchantId: req.body.merchantId,
+					vendorUserId: req.body.vendorUserId
+				},
+				headers: {
+					"A2B-AUTH-TOKEN": req.user.token,
+					"Content-Type": "application/json"
+				}
+			};
+
+			client.get(baseUrl+"/user/merchant?merchantId="+req.body.merchantId, function(existingData, response){
+				if(existingData.status != 404 && existingData.error){
+					sails.log.debug('user-merchant mapping search failed!');
+					res.json({error: existingData.error, message: existingData.message});
+				}else if(existingData.status == 404){
+					sails.log.debug('user-merchant mapping not found. Creating a new mapping.');
+
+					client.post(baseUrl+"/user/merchant", args, function(createdData, response){
+						if(createdData.error){
+							sails.log.debug('user-merchant mapping creation failed!');
+							res.json({error: createdData.error, message: createdData.message});
+						}else{
+							sails.log.debug('new user-merchant mapping created.')
+							res.json({mappingResponse : createdData});
+						}
+					});
+
+				}else{
+					sails.log.debug('user-merchant mapping found.');
+					res.json({mappingResponse : existingData});
+				}
+			});
+		}
+    },
 
     userAuthorization: function(req, res){
     	sails.log.debug('user authorization initiated');

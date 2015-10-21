@@ -58,6 +58,7 @@ module.exports.routes = {
   // 'POST /user/address'          :           'UserController.addOrUpdateAddress',
   // 'DELETE /user/address'        :           'UserController.deleteAddress'
   // '/user/getUserPurchases'      :           'UserController.getUserPurchases',
+  'POST /user/exists'                   : 'UserController.checkUserMerchantAssociation',
   'POST /user/authorize'                : 'UserController.userAuthorization',
   'POST /user/payment'                  : 'UserController.userPayment',
 
