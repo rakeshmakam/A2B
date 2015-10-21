@@ -236,7 +236,7 @@ module.exports = {
 	    		currency : req.body.currency
 	    	},
 	    	headers:{
-	    		"A2B-AUTH-TOKEN": req.user.javaToken,
+	    		"A2B-AUTH-TOKEN": req.user.token,
 	    		"Content-Type": "application/json"
 	    	}
 		};
