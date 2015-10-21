@@ -66,29 +66,30 @@ module.exports = {
 					delete data.token;
 					console.log(data);
 					req.user = data;
+
+					if(req.body.vendorUserId && req.body.merchantId){
+						var args = {
+							data: {
+								merchantId: req.body.merchantId,
+								vendorUserId: req.body.vendorUserId
+							},
+							headers: {
+								"A2B-AUTH-TOKEN": req.user.token,
+								"Content-Type": "application/json"
+							}
+						};
+
+						client.post(baseUrl+"/user/merchant", args, function(data, response){
+							if(data.error){
+								res.json({error: data.error, message: data.message});
+								sails.log.debug(data);
+							}
+						});
+					}
+					
 					res.json({token: data.sailsToken});
 				}
 			});
-
-			if(req.body.vendorUserId && req.body.merchantId){
-				var args = {
-					data: {
-						merchantId: req.body.merchantId,
-						vendorUserId: req.body.vendorUserId
-					},
-					headers: {
-						"A2B-AUTH-TOKEN": req.user.token,
-						"Content-Type": "application/json"
-					}
-				};
-
-				client.post(baseUrl+"/user/merchant", args, function(data, response){
-					if(data.error){
-						res.json({error: data.error, message: data.message});
-						sails.log.debug(data);
-					}
-				});
-			}
 		}
 	},
 
