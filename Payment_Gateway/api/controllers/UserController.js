@@ -77,7 +77,7 @@ module.exports = {
 						vendorUserId: req.body.vendorUserId
 					},
 					headers: {
-						"A2B-AUTH-TOKEN": req.user.javaToken,
+						"A2B-AUTH-TOKEN": req.user.token,
 						"Content-Type": "application/json"
 					}
 				};
@@ -244,6 +244,7 @@ module.exports = {
 		client.post(baseUrl+"/user/authToken",args,function(data, response){
 			// sails.log.debug(data);
 			if(data.error){
+				sails.log.debug('user authorization failed');
 				res.json({error: data.error, message: data.message});
 			}else if(data.token){
 				sails.log.debug('user authorization successfull');
@@ -270,7 +271,6 @@ module.exports = {
 
 		var args = {
 			data: {
-				// userId: req.body.userId,
 				token: req.body.user_token,
 				description: req.body.description,
 				statementDescriptor: req.body.statement_descriptor
@@ -291,21 +291,5 @@ module.exports = {
 				res.json({paymentResponse:data});
 			}
 		});
-
-    	//Check if merchant is legitimate
-    	// User.checkMerchantAuthorization(merchantCredentials, function(err, merchantDetails){
-    	// 	if(err){
-    	// 		res.serverError(err);
-    	// 	}else if(merchantDetails == 'unknown'){
-    	// 		res.status(403).json({msg : 'Unknown merchant credentials'});
-    	// 	}else if(merchantDetails == 'unregistered'){
-    	// 		res.status(401).json({msg : 'Merchant not registered'});
-    	// 	}else if(merchantDetails.status == true){
-    	// 	}
-    	// });
     }
-
-    // check:function(req, res){
-    // 	res.json({env: process.env});
-    // }
 };
