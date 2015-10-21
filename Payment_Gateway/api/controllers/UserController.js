@@ -196,6 +196,7 @@ module.exports = {
     	if(!req.body && !req.body.vendorUserId && !req.body.merchantId){
 			res.badRequest('Please provide all details');
 		}else{
+			var client = new Client();
 			var args = {
 				data: {
 					merchantId: req.body.merchantId,
