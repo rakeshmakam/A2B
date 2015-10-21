@@ -215,12 +215,12 @@ module.exports = {
 	    		currency : req.body.currency
 	    	},
 	    	headers:{
-	    		"A2B-AUTH-TOKEN": req.header,
+	    		"A2B-AUTH-TOKEN": req.user.javaToken,
 	    		"Content-Type": "application/json"
 	    	}
 		};
 
-		client.post(baseUrl+"/admin/user/authToken",args,function(data, response){
+		client.post(baseUrl+"/user/authToken",args,function(data, response){
 			// sails.log.debug(data);
 			if(data.error){
 				res.json({error: data.error, message: data.message});
@@ -251,11 +251,8 @@ module.exports = {
 			data: {
 				// userId: req.body.userId,
 				token: req.body.user_token,
-				merchantId: req.body.merchantId,
-				amount: req.body.amount,
-				currency: req.body.currency,
 				description: req.body.description,
-				statementDescriptor: req.body.statement_descriptor,
+				statementDescriptor: req.body.statement_descriptor
 	    	},
 	    	headers:{
 	    		// "authorization": "Basic "+encodedStr,
@@ -264,13 +261,13 @@ module.exports = {
 	    	}
 		};
 
-		client.post(baseUrl+"/admin/charge",args,function(data, response){
+		client.post(baseUrl+"/merchant/charge",args,function(data, response){
 			if(data.error){
 				sails.log.debug('error in user payment');
 				res.json({error:data.error, message: data.message});
 			}else{
 				sails.log.debug('successfull payment');
-				res.json({paymentResponse:response});
+				res.json({paymentResponse:data});
 			}
 		});
 
