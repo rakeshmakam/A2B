@@ -214,7 +214,8 @@ module.exports = {
 				}else if(existingData.status == 404){
 					sails.log.debug('user-merchant mapping not found. Creating a new mapping.');
 
-					client.post(baseUrl+"/addtobill/v1/user/merchant", args, function(createdData, response){
+					// client.post(baseUrl+"/addtobill/v1/user/merchant", args, function(createdData, response){
+					client.post(baseUrl+"/user/merchant", args, function(createdData, response){
 						if(createdData.error){
 							sails.log.debug('user-merchant mapping creation failed!');
 							res.json({error: createdData.error, message: createdData.message});
