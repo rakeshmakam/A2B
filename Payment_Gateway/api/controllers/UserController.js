@@ -206,16 +206,14 @@ module.exports = {
 				}
 			};
 
-			// client.get(baseUrl+"/addtobill/v1/user/merchant?merchantId="+req.body.merchantId, function(existingData, response){
-			client.get(baseUrl+"/user/merchant?merchantId="+req.body.merchantId, function(existingData, response){
+			client.get(baseUrl+"/addtobill/v1/user/merchant?merchantId="+req.body.merchantId, function(existingData, response){
 				if(existingData.status != 404 && existingData.error){
 					sails.log.debug('user-merchant mapping search failed!');
 					res.json({error: existingData.error, message: existingData.message});
 				}else if(existingData.status == 404){
 					sails.log.debug('user-merchant mapping not found. Creating a new mapping.');
 
-					// client.post(baseUrl+"/addtobill/v1/user/merchant", args, function(createdData, response){
-					client.post(baseUrl+"/user/merchant", args, function(createdData, response){
+					client.post(baseUrl+"/addtobill/v1/user/merchant", args, function(createdData, response){
 						if(createdData.error){
 							sails.log.debug('user-merchant mapping creation failed!');
 							res.json({error: createdData.error, message: createdData.message});
@@ -227,7 +225,6 @@ module.exports = {
 
 				}else{
 					sails.log.debug('user-merchant mapping found.');
-					sails.log.debug(existingData);
 					res.json({mappingResponse : existingData});
 				}
 			});
