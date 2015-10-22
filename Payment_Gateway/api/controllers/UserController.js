@@ -7,8 +7,6 @@
 var jwt = require('jsonwebtoken');
 var Client = require('node-rest-client').Client;
 var baseUrl = "http://52.11.231.112:8080";
-var NODEUSERNAME = 'admin';
-var NODEPASSWORD = 'admin';
 
 module.exports = {
 	// Add user
@@ -31,7 +29,7 @@ module.exports = {
 			} 
 		};
 
-		client.post(baseUrl+"/user/register", args, function(data, resp){
+		client.post(baseUrl+"/addtobill/v1/user/register", args, function(data, resp){
 			if (data.error) {
 				res.negotiate({error: data.error, message: data.message});
 			} else {
@@ -56,7 +54,7 @@ module.exports = {
 				} 
 			};
 
-			client.post(baseUrl+"/user/login", args, function(data, resp){
+			client.post(baseUrl+"/addtobill/v1/user/login", args, function(data, resp){
 				if (data.error) {
 					res.negotiate({error: data.error, message: data.message});
 				} else {
@@ -82,7 +80,7 @@ module.exports = {
 			} 
 		};
 
-		client.get(baseUrl+"/user", args, function(data, resp){
+		client.get(baseUrl+"/addtobill/v1/user", args, function(data, resp){
 			if (data.error) {
 				res.negotiate({error: data.error, message: data.message});
 			} else {
@@ -208,14 +206,14 @@ module.exports = {
 				}
 			};
 
-			client.get(baseUrl+"/user/merchant?merchantId="+req.body.merchantId, function(existingData, response){
+			client.get(baseUrl+"/addtobill/v1/user/merchant?merchantId="+req.body.merchantId, function(existingData, response){
 				if(existingData.status != 404 && existingData.error){
 					sails.log.debug('user-merchant mapping search failed!');
 					res.json({error: existingData.error, message: existingData.message});
 				}else if(existingData.status == 404){
 					sails.log.debug('user-merchant mapping not found. Creating a new mapping.');
 
-					client.post(baseUrl+"/user/merchant", args, function(createdData, response){
+					client.post(baseUrl+"/addtobill/v1/user/merchant", args, function(createdData, response){
 						if(createdData.error){
 							sails.log.debug('user-merchant mapping creation failed!');
 							res.json({error: createdData.error, message: createdData.message});
@@ -262,7 +260,7 @@ module.exports = {
 	    	}
 		};
 
-		client.post(baseUrl+"/user/authToken",args,function(data, response){
+		client.post(baseUrl+"/addtobill/v1/user/authToken",args,function(data, response){
 			// sails.log.debug(data);
 			if(data.error){
 				sails.log.debug('user authorization failed');
@@ -303,7 +301,7 @@ module.exports = {
 	    	}
 		};
 
-		client.post(baseUrl+"/merchant/charge",args,function(data, response){
+		client.post(baseUrl+"/addtobill/v1/merchant/charge",args,function(data, response){
 			if(data.error){
 				sails.log.debug('error in user payment');
 				res.json({error:data.error, message: data.message});

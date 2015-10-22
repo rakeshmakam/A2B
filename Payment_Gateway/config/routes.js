@@ -35,12 +35,12 @@ module.exports.routes = {
   '/': {
     view: 'homepage'
   },
-  'GET /show_hide_atob_button'          : 'AppController.showHideAtoBButton',
+  'GET /v1/show_hide_atob_button'          : 'AppController.showHideAtoBButton',
 
-  'POST /user/signup'                   : 'UserController.add',
-  'POST /user/login'                    : 'UserController.login',
-  'GET /user/logout'                    : 'UserController.logout',
-  'GET /user'                           : 'UserController.profile',
+  'POST /v1/user/signup'                   : 'UserController.add',
+  'POST /v1/user/login'                    : 'UserController.login',
+  'GET /v1/user/logout'                    : 'UserController.logout',
+  'GET /v1/user'                           : 'UserController.profile',
 
   // 'POST /user/signup'                   : 'UserController.add',
   // 'GET /user'                           : 'UserController.profile',
@@ -58,9 +58,9 @@ module.exports.routes = {
   // 'POST /user/address'          :           'UserController.addOrUpdateAddress',
   // 'DELETE /user/address'        :           'UserController.deleteAddress'
   // '/user/getUserPurchases'      :           'UserController.getUserPurchases',
-  'POST /user/exists'                   : 'UserController.checkUserMerchantAssociation',
-  'POST /user/authorize'                : 'UserController.userAuthorization',
-  'POST /user/payment'                  : 'UserController.userPayment',
+  'POST /v1/user/exists'                   : 'UserController.checkUserMerchantAssociation',
+  'POST /v1/user/authorize'                : 'UserController.userAuthorization',
+  'POST /v1/user/payment'                  : 'UserController.userPayment',
 
   // 'POST /merchant'              :           'MerchantController.add',
   // 'GET /check'  : 'UserController.check'

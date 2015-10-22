@@ -90,14 +90,14 @@ module.exports = {
     customMiddleware: function(app){
       app.use(expressJwt({secret: 'secret'}).unless({path: [
           '/',
-          '/show_hide_atob_button',
-          '/user/signup',
-          '/user/login',
+          '/v1/show_hide_atob_button',
+          '/v1/user/signup',
+          '/v1user/login',
           // '/check',
           // '/merchant',
-          '/user/payment',
-          '/user/reset_password_initiate',
-          '/user/reset_password',
+          '/v1/user/payment',
+          '/v1/user/reset_password_initiate',
+          '/v1/user/reset_password',
           /^\/user\/activate\/.*/
       ]}));
     }
