@@ -92,7 +92,7 @@ module.exports = {
           '/',
           '/v1/show_hide_atob_button',
           '/v1/user/signup',
-          '/v1user/login',
+          '/v1/user/login',
           // '/check',
           // '/merchant',
           '/v1/user/payment',
