@@ -206,7 +206,14 @@ module.exports = {
 				}
 			};
 
-			client.get(baseUrl+"/addtobill/v1/user/merchant?merchantId="+req.body.merchantId, function(existingData, response){
+			var getArgs = {
+				headers: {
+					"A2B-AUTH-TOKEN": req.user.token,
+					"Content-Type": "application/json"
+				}
+			};
+
+			client.get(baseUrl+"/addtobill/v1/user/merchant?merchantId="+req.body.merchantId, getArgs, function(existingData, response){
 				if(existingData.status != 404 && existingData.error){
 					sails.log.debug('user-merchant mapping search failed!');
 					res.json({error: existingData.error, message: existingData.message});
