@@ -227,6 +227,7 @@ module.exports = {
 
 				}else{
 					sails.log.debug('user-merchant mapping found.');
+					sails.log.debug(existingData);
 					res.json({mappingResponse : existingData});
 				}
 			});
