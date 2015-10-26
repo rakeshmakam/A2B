@@ -21,6 +21,16 @@ module.exports = {
 		}
 	},
 
+	get: function(callback){
+		Merchant.find().exec(function(err, merchants){
+			if(err){
+				callback(err, null);
+			}else{
+				callback(null, merchants);
+			}
+		});
+	},
+
 	// addMerchant: function(merchantName, callback){
 	// 	var set = '0123456789abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ';
 	// 	var merchantAuthKey = '';
