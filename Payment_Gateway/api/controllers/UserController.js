@@ -107,7 +107,6 @@ module.exports = {
 
 	// Log out user
 	logout: function (req, res) {
-		console.log(req);
 		delete req['user'];
         res.ok("Logout Successfully");
     },
@@ -189,6 +188,123 @@ module.exports = {
     // 		});
     // 	}
     // },
+
+    getAccounts: function(req, res){
+    	sails.log.debug('getting accounts for user id - '+req.user.id);
+    	var client = new Client();
+
+    	var getArgs = {
+    		headers: {
+    			"A2B-AUTH-TOKEN": req.user.token,
+				"Content-Type": "application/json"
+    		}
+    	};
+
+    	client.get(baseUrl+"/addtobill/v1/user/accounts", getArgs, function(userAccounts, resp){
+    		if(userAccounts.error){
+    			sails.log.debug('error in getting accounts for user '+req.user.id);
+    			sails.log.debug(userAccounts);
+    			res.json({error: userAccounts.error, message: userAccounts.message});
+    		}else{
+    			sails.log.debug('accounts fetched for this user successfully');
+    			res.json({accounts: userAccounts});
+    		}
+    	});
+    },
+
+    getAccount: function(req, res){
+    	sails.log.debug('fetching single account for user '+req.user.id);
+    	var accountId = req.param('id');
+    	var client = new Client();
+
+    	var getArgs = {
+    		headers: {
+    			"A2B-AUTH-TOKEN": req.user.token,
+				"Content-Type": "application/json"
+    		}
+    	};
+
+    	client.get(baseUrl+"/addtobill/v1/user/account?id="+accountId, getArgs, function(userAccountData, resp){
+    		if(userAccountData.error){
+    			sails.log.debug('error fetching user account');
+    			sails.log.debug(userAccountData);
+    			res.json({error: userAccountData.error, message: userAccountData.message});
+    		}else{
+    			sails.log.debug('user account fetched successfully');
+    			res.json({userAccount: userAccountData});
+    		}
+    	});
+    },
+
+    getCharges: function(req, res){
+    	sails.log.debug('fetching charges for user '+req.user.id);
+    	var client = new Client();
+
+    	var getArgs = {
+    		headers: {
+    			"A2B-AUTH-TOKEN": req.user.token,
+				"Content-Type": "application/json"
+    		}
+    	};
+
+    	client.get(baseUrl+"/addtobill/v1/user/charges", getArgs, function(userCharges, resp){
+    		if(userCharges.error){
+    			sails.log.debug('error fetching user charges');
+    			sails.log.debug(userCharges);
+    			res.json({error: userCharges.error, message: userCharges.message});
+    		}else{
+    			sails.log.debug('user charges fetched successfully');
+    			res.json({accounts: userCharges});
+    		}
+    	});
+    },
+
+    getCharge: function(req, res){
+    	sails.log.debug('fetching single charge for user '+req.user.id);
+    	var chargeId = req.param('id');
+    	var client = new Client();
+
+    	var getArgs = {
+    		headers: {
+    			"A2B-AUTH-TOKEN": req.user.token,
+				"Content-Type": "application/json"
+    		}
+    	};
+
+    	client.get(baseUrl+"/addtobill/v1/user/charge?id="+chargeId, getArgs, function(userChargeData, resp){
+    		if(userChargeData.error){
+    			sails.log.debug('error fetching user charge');
+    			sails.log.debug(userChargeData);
+    			res.json({error: userChargeData.error, message: userChargeData.message});
+    		}else{
+    			sails.log.debug('user charge fetched successfully');
+    			res.json({userAccount: userChargeData});
+    		}
+    	});
+    },
+
+    getTransactions: function(req, res){
+    	sails.log.debug('fetching transactions for user '+req.user.id);
+    	var client = new Client();
+
+    	var getArgs = {
+    		headers: {
+    			"A2B-AUTH-TOKEN": req.user.token,
+				"Content-Type": "application/json"
+    		}
+    	};
+
+    	client.get(baseUrl+"/addtobill/v1/user/transactions", getArgs, function(userTransactions, resp){
+    		if(userTransactions.error){
+    			sails.log.debug('error fetching user transactions');
+    			sails.log.debug(userTransactions);
+    			res.json({error: userTransactions.error, message: userTransactions.message});
+    		}else{
+    			sails.log.debug('user transactions fetched successfully');
+    			res.json({accounts: userTransactions});
+    		}
+    	});
+    },
 
     checkUserMerchantAssociation: function(req, res){
     	if(!req.body && !req.body.vendorUserId && !req.body.merchantId){

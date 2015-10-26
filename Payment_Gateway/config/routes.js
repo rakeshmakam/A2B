@@ -54,15 +54,19 @@ module.exports.routes = {
 
 
   // '/user/getUserProfile'        :           'UserController.getUserProfile',
-  // '/user/getUserBills'          :           'UserController.getUserBills',
+  'GET /v1/user/accounts'                  : 'UserController.getAccounts',
+  'GET /v1/user/account/:id'               : 'UserController.getAccount',
+  'GET /v1/user/charges'                   : 'UserController.getCharges',
+  'GET /v1/user/charge/:id'                : 'UserController.getCharge',
+  'GET /v1/user/transactions'              : 'UserController.getTransactions',
   // 'POST /user/address'          :           'UserController.addOrUpdateAddress',
-  // 'DELETE /user/address'        :           'UserController.deleteAddress'
+  // 'DELETE /user/address'        :           'UserController.deleteAddress',
   // '/user/getUserPurchases'      :           'UserController.getUserPurchases',
   'POST /v1/user/exists'                   : 'UserController.checkUserMerchantAssociation',
   'POST /v1/user/authorize'                : 'UserController.userAuthorization',
   'POST /v1/user/payment'                  : 'UserController.userPayment',
 
-  'GET /v1/merchants'                      : 'MerchantController.get'
+  'GET /v1/merchants'                      : 'MerchantController.get',
 
   // 'POST /merchant'              :           'MerchantController.add',
   // 'GET /check'  : 'UserController.check'
