@@ -6,7 +6,7 @@
  */
 var jwt = require('jsonwebtoken');
 var Client = require('node-rest-client').Client;
-var baseUrl = "http://52.11.231.112:8080";
+var baseUrl = "http://54.200.64.61:8080";
 
 module.exports = {
 	// Add user
@@ -246,8 +246,10 @@ module.exports = {
 				"Content-Type": "application/json"
     		}
     	};
-
-    	client.get(baseUrl+"/addtobill/v1/user/charges", getArgs, function(userCharges, resp){
+    	//default size is 20 and page is 1
+    	//page is how many pages you wanna show
+    	//size is hwo many elements in each page
+    	client.get(baseUrl+"/addtobill/v1/user/charges?size=100&page=0", getArgs, function(userCharges, resp){
     		if(userCharges.error){
     			sails.log.debug('error fetching user charges');
     			sails.log.debug(userCharges);
