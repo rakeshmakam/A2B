@@ -91,7 +91,7 @@ module.exports = {
       app.use(expressJwt({secret: 'secret'}).unless({path: [
           '/',
           '/v1/show_hide_atob_button',
-          '/v1/user/signup',
+          '/v1/user/register',
           '/v1/user/login',
           '/v1/merchants',
           '/v1/user/payment',
