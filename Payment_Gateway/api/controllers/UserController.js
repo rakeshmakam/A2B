@@ -204,7 +204,7 @@ module.exports = {
     		if(userAccounts.error){
     			sails.log.debug('error in getting accounts for user '+req.user.id);
     			sails.log.debug(userAccounts);
-    			res.json({error: userAccounts.error, message: userAccounts.message});
+    			res.negotiate({error: userAccounts.error, message: userAccounts.message});
     		}else{
     			sails.log.debug('accounts fetched for this user successfully');
     			res.json({accounts: userAccounts});
@@ -228,7 +228,7 @@ module.exports = {
     		if(userAccountData.error){
     			sails.log.debug('error fetching user account');
     			sails.log.debug(userAccountData);
-    			res.json({error: userAccountData.error, message: userAccountData.message});
+    			res.negotiate({error: userAccountData.error, message: userAccountData.message});
     		}else{
     			sails.log.debug('user account fetched successfully');
     			res.json({userAccount: userAccountData});
@@ -253,7 +253,7 @@ module.exports = {
     		if(userCharges.error){
     			sails.log.debug('error fetching user charges');
     			sails.log.debug(userCharges);
-    			res.json({error: userCharges.error, message: userCharges.message});
+    			res.negotiate({error: userCharges.error, message: userCharges.message});
     		}else{
     			sails.log.debug('user charges fetched successfully');
     			res.json({accounts: userCharges});
@@ -277,7 +277,7 @@ module.exports = {
     		if(userChargeData.error){
     			sails.log.debug('error fetching user charge');
     			sails.log.debug(userChargeData);
-    			res.json({error: userChargeData.error, message: userChargeData.message});
+    			res.negotiate({error: userChargeData.error, message: userChargeData.message});
     		}else{
     			sails.log.debug('user charge fetched successfully');
     			res.json({userAccount: userChargeData});
@@ -300,10 +300,38 @@ module.exports = {
     		if(userTransactions.error){
     			sails.log.debug('error fetching user transactions');
     			sails.log.debug(userTransactions);
-    			res.json({error: userTransactions.error, message: userTransactions.message});
+    			res.negotiate({error: userTransactions.error, message: userTransactions.message});
     		}else{
     			sails.log.debug('user transactions fetched successfully');
     			res.json({accounts: userTransactions});
+    		}
+    	});
+    },
+
+    getBills: function(req, res){
+    	sails.log.debug('fetching bills for user '+req.user.id);
+    	var client = new Client();
+
+    	var getArgs = {
+    		headers: {
+    			"A2B-AUTH-TOKEN": req.user.token,
+				"Content-Type": "application/json"
+    		}
+    	};
+
+    	client.get(baseUrl+"/addtobill/v1/user/accounts", getArgs, function(userAccounts, resp){
+    		if(userAccounts.error){
+    			sails.log.debug('error in getting accounts for user '+req.user.id);
+    			sails.log.debug(userAccounts);
+    			res.negotiate({error: userAccounts.error, message: userAccounts.message});
+    		}else{
+    			Bills.get(userAccounts[0].accountId, function(err, bills){
+    				if(err){
+    					res.serverError(err);
+    				}else{
+    					res.json({userBills: bills});
+    				}
+    			});
     		}
     	});
     },
@@ -334,14 +362,14 @@ module.exports = {
 			client.get(baseUrl+"/addtobill/v1/user/merchant?merchantId="+req.body.merchantId, getArgs, function(existingData, response){
 				if(existingData.status != 404 && existingData.error){
 					sails.log.debug('user-merchant mapping search failed!');
-					res.json({error: existingData.error, message: existingData.message});
+					res.negotiate({error: existingData.error, message: existingData.message});
 				}else if(existingData.status == 404){
 					sails.log.debug('user-merchant mapping not found. Creating a new mapping.');
 
 					client.post(baseUrl+"/addtobill/v1/user/merchant", args, function(createdData, response){
 						if(createdData.error){
 							sails.log.debug('user-merchant mapping creation failed!');
-							res.json({error: createdData.error, message: createdData.message});
+							res.negotiate({error: createdData.error, message: createdData.message});
 						}else{
 							sails.log.debug('new user-merchant mapping created.')
 							res.json({mappingResponse : createdData});
@@ -389,7 +417,7 @@ module.exports = {
 			// sails.log.debug(data);
 			if(data.error){
 				sails.log.debug('user authorization failed');
-				res.json({error: data.error, message: data.message});
+				res.negotiate({error: data.error, message: data.message});
 			}else if(data.token){
 				sails.log.debug('user authorization successfull');
 				res.json({userToken: data.token});
@@ -429,7 +457,7 @@ module.exports = {
 		client.post(baseUrl+"/addtobill/v1/merchant/charge",args,function(data, response){
 			if(data.error){
 				sails.log.debug('error in user payment');
-				res.json({error:data.error, message: data.message});
+				res.negotiate({error:data.error, message: data.message});
 			}else{
 				sails.log.debug('successfull payment');
 				res.json({paymentResponse:data});
