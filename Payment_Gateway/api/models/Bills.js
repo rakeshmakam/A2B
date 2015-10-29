@@ -12,6 +12,7 @@ module.exports = {
 	},
 
 	get: function(userAcctId, callback){
+		console.log(userAcctId);
 		Bills.find({accountId: userAcctId}).exec(function(err, bills){
 			if(err){
 				callback(err, null);
