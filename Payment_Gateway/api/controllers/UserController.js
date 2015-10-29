@@ -369,7 +369,7 @@ module.exports = {
 				data: {
 					merchantId: req.body.merchantId,
 					// vendorUserId: req.body.vendorUserId
-					vendorUserId: parseInt((Math.random())*1000);
+					vendorUserId: parseInt((Math.random())*1000)
 
 				},
 				headers: {
