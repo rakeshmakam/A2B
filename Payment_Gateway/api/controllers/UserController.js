@@ -310,7 +310,7 @@ module.exports = {
 
     getBills: function(req, res){
     	// console.log(req.user);
-    	// sails.log.debug('fetching bills for user '+req.user.id);
+    	sails.log.debug('fetching bills for user '+req.user.id);
     	var client = new Client();
 
     	var getArgs = {
@@ -322,7 +322,7 @@ module.exports = {
 
     	client.get(baseUrl+"/addtobill/v1/user/accounts", getArgs, function(userAccounts, resp){
     		if(userAccounts.error){
-    			// sails.log.debug('error in getting accounts for user '+req.user.id);
+    			sails.log.debug('error in getting accounts for user '+req.user.id);
     			// sails.log.debug(userAccounts);
     			res.negotiate({error: userAccounts.error, message: userAccounts.message});
     		}else{
