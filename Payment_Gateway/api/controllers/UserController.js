@@ -33,7 +33,29 @@ module.exports = {
 			if (data.error) {
 				res.negotiate({error: data.error, message: data.message});
 			} else {
-				res.json(data);
+				var args = {
+					data: {
+						userName: req.body.email,
+						password: req.body.password
+					},
+					headers:{
+						"Content-Type": "application/json"
+					} 
+				};
+
+				client.post(baseUrl+"/addtobill/v1/user/login", args, function(data, resp){
+					if (data.error) {
+						res.negotiate({error: data.error, message: data.message});
+					} else {
+						var sailsToken = jwt.sign(data, 'secret', {expiresIn: 1296000}); //15 days
+						data.sailsToken = sailsToken;
+						data.javaToken = data.token;
+						delete data.token;
+						console.log(data);
+						req.user = data;
+						res.json({token: data.sailsToken});
+					}
+				});
 			}
 		});
 	},
