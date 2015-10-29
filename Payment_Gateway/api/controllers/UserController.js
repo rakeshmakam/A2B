@@ -368,7 +368,9 @@ module.exports = {
 			var args = {
 				data: {
 					merchantId: req.body.merchantId,
-					vendorUserId: req.body.vendorUserId
+					// vendorUserId: req.body.vendorUserId
+					vendorUserId: parseInt((Math.random())*1000);
+
 				},
 				headers: {
 					"A2B-AUTH-TOKEN": req.user.token,
