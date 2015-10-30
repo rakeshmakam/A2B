@@ -59,7 +59,7 @@ module.exports.routes = {
   'GET /v1/user/charges'                   : 'UserController.getCharges',
   'GET /v1/user/charge/:id'                : 'UserController.getCharge',
   'GET /v1/user/transactions'              : 'UserController.getTransactions',
-  'GET /v1/user/bills'                     : 'UserController.getBills',
+  'GET /v1/user/allbills'                     : 'UserController.getBills',
   // '/user/getUserPurchases'      :           'UserController.getUserPurchases',
   'POST /v1/user/exists'                   : 'UserController.checkUserMerchantAssociation',
   'POST /v1/user/authorize'                : 'UserController.userAuthorization',
