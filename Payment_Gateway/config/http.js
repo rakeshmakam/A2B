@@ -97,7 +97,7 @@ module.exports = {
           '/v1/user/payment',
           '/v1/user/reset_password_initiate',
           '/v1/user/reset_password',
-          '/merchant/user/exists',
+          '/v1/merchant/user/exists',
           /^\/user\/activate\/.*/
       ]}));
     }
