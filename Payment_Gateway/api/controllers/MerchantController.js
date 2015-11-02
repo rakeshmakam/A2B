@@ -26,22 +26,23 @@ module.exports = {
 		sails.log.debug(cipherText);
 		var plainText = Aes.decrypt(cipherText, 'rakesh', 256);
 		console.log(plainText);
-		if(plainText.email != req.body.email){
-			payloadFlag = true;
-		}else if(plainText.phoneNumber != req.body.phoneNumber){
-			payloadFlag = true;
-		}else if(plainText.billingAddress.street != req.body.street){
-			payloadFlag = true;
-		}else if(plainText.billingAddress.city != req.body.city){
-			payloadFlag = true;
-		}else if(plainText.billingAddress.postalCode != req.body.postalCode){
-			payloadFlag = true;
-		}else if(plainText.billingAddress != req.body.state){
-			payloadFlag = true;
-		}else if(payloadFlag == true){
-			sails.log.debug('error in flag');
-			res.status(401).json({error:'Data unauthorized!'});
-		}else{
+		
+		// if(plainText.email != req.body.email){
+		// 	payloadFlag = true;
+		// }else if(plainText.phoneNumber != req.body.phoneNumber){
+		// 	payloadFlag = true;
+		// }else if(plainText.billingAddress.street != req.body.street){
+		// 	payloadFlag = true;
+		// }else if(plainText.billingAddress.city != req.body.city){
+		// 	payloadFlag = true;
+		// }else if(plainText.billingAddress.postalCode != req.body.postalCode){
+		// 	payloadFlag = true;
+		// }else if(plainText.billingAddress != req.body.state){
+		// 	payloadFlag = true;
+		// }else if(payloadFlag == true){
+		// 	sails.log.debug('error in flag');
+		// 	res.status(401).json({error:'Data unauthorized!'});
+		// }else{
 			var client = new Client();
 
 			var args = {
@@ -84,6 +85,6 @@ module.exports = {
 					}
 				}
 			});
-		}
+		// }
 	}
 };
