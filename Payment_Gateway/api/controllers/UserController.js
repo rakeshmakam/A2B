@@ -411,19 +411,7 @@ module.exports = {
     },
 
     userAuthorization: function(req, res){
-    	sails.log.debug('user authorization initiated');
-    	// var userId = req.user.id;
-    	// Merchant.validateMerchant(req.body.merchantId, function(err, merchantDetails){
-    	// 	if(err){
-    	// 		res.serverError(err);
-    	// 	}else if(merchantDetails == false){
-    	// 		res.status(401).json({msg : 'Merchant not registered'});
-    	// 	}else{
-    	// 		// var encodedStr = new Buffer(process.env.NODEUSERNAME+":"+process.env.NODEPASSWORD).toString('base64');
-    	// 	}
-    	// });
-	
-		sails.log.debug(req.user);
+    	sails.log.debug('user authorization initiated');	
     	var client = new Client();
 
 		var args = {
