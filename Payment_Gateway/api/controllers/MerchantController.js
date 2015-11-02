@@ -47,17 +47,7 @@ module.exports = {
 			var client = new Client();
 
 			var args = {
-				data: {
-					email: req.body.email,
-					phoneNumber: req.body.phoneNumber,
-					payload: req.body.payload,
-					billingAddress: {
-						street: req.body.street,
-						city: req.body.city,
-						postalCode: req.body.postalCode,
-						state: req.body.state
-					}
-		    	},
+				data: req.body,
 		    	headers:{
 		    		"Authorization" : req.headers.authorization,
 		    		"Content-Type": "application/json"
