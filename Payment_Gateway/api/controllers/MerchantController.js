@@ -7,6 +7,7 @@
 var Client = require('node-rest-client').Client;
 var Aes = require('crypto-libraries/aes-ctr');
 var baseUrl = "http://52.11.231.112:8080";
+var jwt = require('jsonwebtoken');
 
 module.exports = {
 	get: function(req, res){
@@ -24,9 +25,9 @@ module.exports = {
 		sails.log.debug('initialized autologin');
 		var payloadFlag = false;
 		var cipherText = req.body.payload;
-		sails.log.debug(cipherText);
+		// sails.log.debug(cipherText);
 		var plainText = Aes.decrypt(cipherText, 'rakesh', 256);
-		console.log(plainText);
+		// console.log(plainText);
 
 		// if(plainText.email != req.body.email){
 		// 	payloadFlag = true;
