@@ -19,6 +19,7 @@ module.exports = {
 	},
 
 	autoLogin: function(req, res){
+		sails.log.debug('initialized autologin');
 		var payloadFlag = false;
 		var cipherText = req.body.payload;
 		var plainText = Aes.decrypt(cipherText, 'rakesh', 256);
@@ -35,6 +36,7 @@ module.exports = {
 		}else if(cipherText.billingAddress != req.body.state){
 			payloadFlag = true;
 		}else if(payloadFlag == true){
+			sails.log.debug('error in flag');
 			res.status(401).json({error:'Data unauthorized!'});
 		}else{
 			var client = new Client();
@@ -72,6 +74,7 @@ module.exports = {
 						sails.log.debug('successfull merchant user login');
 						res.json({token: data.sailsToken});
 					}else{
+						sails.log.debug('other data');
 						res.json({resp: data});
 					}
 				}
