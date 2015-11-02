@@ -62,8 +62,18 @@ module.exports = {
 					sails.log.debug('error in merchant user login');
 					res.negotiate({error:data.error, message: data.message});
 				}else{
-					sails.log.debug('successfull merchant user login');
-					res.json({paymentResponse:data});
+					if(data.token){
+						var sailsToken = jwt.sign(data, 'secret', {expiresIn: 1296000}); //15 days
+						data.sailsToken = sailsToken;
+						data.javaToken = data.token;
+						delete data.token;
+						console.log(data);
+						req.user = data;
+						sails.log.debug('successfull merchant user login');
+						res.json({token: data.sailsToken});
+					}else{
+						res.json({resp: data});
+					}
 				}
 			});
 		}
