@@ -460,7 +460,7 @@ module.exports = {
 			data: {
 				token: req.body.user_token,
 				description: req.body.description,
-				statementDescriptor: req.body.statement_descriptor
+				statementDescription: req.body.statement_descriptor
 	    	},
 	    	headers:{
 	    		// "authorization": "Basic "+encodedStr,
