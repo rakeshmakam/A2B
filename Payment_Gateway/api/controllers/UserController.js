@@ -468,6 +468,7 @@ module.exports = {
 	    		"Content-Type": "application/json"
 	    	}
 		};
+		console.log('args--',args);
 
 		client.post(baseUrl+"/addtobill/v1/merchant/charge",args,function(data, response){
 			if(data.error){
