@@ -6,6 +6,7 @@
   "keywords": [],
   "dependencies": {
     "aes": "^0.1.0",
+    "crypto-libraries": "git+https://github.com/chrisveness/crypto.git",
     "ejs": "~0.8.4",
     "express-jwt": "^3.1.0",
     "grunt": "0.4.2",
