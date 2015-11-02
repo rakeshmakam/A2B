@@ -23,18 +23,20 @@ module.exports = {
 		sails.log.debug('initialized autologin');
 		var payloadFlag = false;
 		var cipherText = req.body.payload;
+		sails.log.debug(cipherText);
 		var plainText = Aes.decrypt(cipherText, 'rakesh', 256);
-		if(cipherText.email != req.body.email){
+		console.log(plainText);
+		if(plainText.email != req.body.email){
 			payloadFlag = true;
-		}else if(cipherText.phoneNumber != req.body.phoneNumber){
+		}else if(plainText.phoneNumber != req.body.phoneNumber){
 			payloadFlag = true;
-		}else if(cipherText.billingAddress.street != req.body.street){
+		}else if(plainText.billingAddress.street != req.body.street){
 			payloadFlag = true;
-		}else if(cipherText.billingAddress.city != req.body.city){
+		}else if(plainText.billingAddress.city != req.body.city){
 			payloadFlag = true;
-		}else if(cipherText.billingAddress.postalCode != req.body.postalCode){
+		}else if(plainText.billingAddress.postalCode != req.body.postalCode){
 			payloadFlag = true;
-		}else if(cipherText.billingAddress != req.body.state){
+		}else if(plainText.billingAddress != req.body.state){
 			payloadFlag = true;
 		}else if(payloadFlag == true){
 			sails.log.debug('error in flag');
