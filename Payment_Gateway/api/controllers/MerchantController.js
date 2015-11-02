@@ -6,6 +6,7 @@
  */
 var Client = require('node-rest-client').Client;
 var Aes = require('crypto-libraries/aes-ctr');
+var baseUrl = "http://52.11.231.112:8080";
 
 module.exports = {
 	get: function(req, res){
@@ -26,7 +27,7 @@ module.exports = {
 		sails.log.debug(cipherText);
 		var plainText = Aes.decrypt(cipherText, 'rakesh', 256);
 		console.log(plainText);
-		
+
 		// if(plainText.email != req.body.email){
 		// 	payloadFlag = true;
 		// }else if(plainText.phoneNumber != req.body.phoneNumber){
