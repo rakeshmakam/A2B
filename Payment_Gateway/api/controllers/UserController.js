@@ -453,6 +453,7 @@ module.exports = {
     	// };
     	
     	// var encodedStr = new Buffer(process.env.NODEUSERNAME+":"+process.env.NODEPASSWORD).toString('base64');
+		console.log(req.body);
 		var client = new Client();
 
 		var args = {
