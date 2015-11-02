@@ -13,6 +13,7 @@ module.exports = {
 			if(err){
 				res.serverError(err);
 			}else{
+				sails.log.debug('fetched successfully');
 				res.json({merchants: merchants});
 			}
 		});
@@ -59,7 +60,9 @@ module.exports = {
 		    	}
 			};
 
+			sails.log.debug('before sending req to java');
 			client.post(baseUrl+"/addtobill/v1/merchant/user/login",args,function(data, response){
+				console.log(data);
 				if(data.error){
 					sails.log.debug('error in merchant user login');
 					res.negotiate({error:data.error, message: data.message});
