@@ -427,11 +427,29 @@ module.exports = {
 	    	}
 		};
 
+		var getArgs = {
+			headers: {
+				"A2B-AUTH-TOKEN": req.user.token,
+				"Content-Type": "application/json"
+			}
+		};
+
 		client.post(baseUrl+"/addtobill/v1/user/authToken",args,function(data, response){
 			// sails.log.debug(data);
 			if(data.error){
 				sails.log.debug('user authorization failed');
-				res.negotiate({error: data.error, message: data.message});
+				client.get(baseUrl+"/addtobill/v1/user/accounts", getArgs, function(userAccounts, resp){
+		    		if(userAccounts.error){
+		    			sails.log.debug('error in getting accounts for user '+req.user.id);
+		    			sails.log.debug(userAccounts);
+		    			res.negotiate({error: userAccounts.error, message: userAccounts.message});
+		    		}else{
+		    			sails.log.debug('accounts fetched for this user successfully');
+		    			// res.json({accounts: userAccounts});
+		    			sails.log.debug(userAccounts);
+		    			res.negotiate({error: data.error, message: data.message, outstandingBalance: userAccounts[0].accountBalance.runningBalance});
+		    		}
+		    	});
 			}else if(data.token){
 				sails.log.debug('user authorization successfull');
 				res.json({userToken: data.token});
@@ -453,7 +471,6 @@ module.exports = {
     	// };
     	
     	// var encodedStr = new Buffer(process.env.NODEUSERNAME+":"+process.env.NODEPASSWORD).toString('base64');
-		console.log(req.body);
 		var client = new Client();
 
 		var args = {
@@ -468,7 +485,6 @@ module.exports = {
 	    		"Content-Type": "application/json"
 	    	}
 		};
-		console.log('args--',args);
 
 		client.post(baseUrl+"/addtobill/v1/merchant/charge",args,function(data, response){
 			if(data.error){

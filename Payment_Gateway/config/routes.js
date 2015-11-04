@@ -52,7 +52,7 @@ module.exports.routes = {
   // 'POST /user/reset_password_initiate'  : 'UserController.resetPasswordInitiate',
   // 'PUT /user/reset_password'            : 'UserController.resetPassword',
 
-  'POST /v1/merchant/user/exists'             : 'MerchantController.autoLogin',
+  'POST /v1/merchant/user/exists'          : 'MerchantController.autoLogin',
   // '/user/getUserProfile'        :           'UserController.getUserProfile',
   'GET /v1/user/accounts'                  : 'UserController.getAccounts',
   'GET /v1/user/account/:id'               : 'UserController.getAccount',
@@ -66,6 +66,12 @@ module.exports.routes = {
   'POST /v1/user/payment'                  : 'UserController.userPayment',
 
   'GET /v1/merchants'                      : 'MerchantController.get',
+
+  'POST /v1/admin/users'                   : 'AdminController.getUsers',
+  'GET /v1/admin/charges'                  : 'AdminController.getCharges',
+  'GET /v1/admin/transactions'             : 'AdminController.getTransactions',
+  'GET /v1/admin/accounts'                 : 'AdminController.getAccounts',
+  'GET /v1/admin/bills'                    : 'AdminController.getBills'
 
   // 'POST /merchant'              :           'MerchantController.add',
   // 'GET /check'  : 'UserController.check'

@@ -212,6 +212,24 @@ module.exports = {
 				callback(null, 'unregistered');
 			}
 		});
+	},
+
+	search: function(searchKey, callback){
+		var searchExp = new RegExp(searchKey,"gi");
+		User.find(
+			{$or: [
+					{full_name: searchExp},
+					{email: searchExp},
+					{phone_num: searchExp}
+				]
+			}
+		).exec(function(err, results){
+			if(err){
+				callback(err, null);
+			}else{
+				callback(null, results);
+			}
+		});
 	}
 
 };
